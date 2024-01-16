@@ -30,7 +30,7 @@ public class OcrController {
             // Tesseract OCR 설정
             ITesseract tesseract = new Tesseract();
             tesseract.setDatapath("C://Tess4J/tessdata"); // tessdata 디렉터리의 경로 설정
-            tesseract.setLanguage("eng"); // 언어 설정　
+            tesseract.setLanguage("jpn"); // 언어 설정　
             tesseract.setTessVariable("user_defined_dpi", "300"); // 예: 300 DPI로 설정
 
 
