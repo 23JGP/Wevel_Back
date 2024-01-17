@@ -80,6 +80,13 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .getBuilder("facebook")
                 .clientId(clientId)
                 .clientSecret(clientSecret)
+                .scope(
+                        "public_profile",
+                        "email",
+                        "user_birthday",
+                        "user_gender"
+                )
+                .userInfoUri("https://graph.facebook.com/me?fields=id,name,email,user_birthday,user_gender")
                 .build();
     }
 }
