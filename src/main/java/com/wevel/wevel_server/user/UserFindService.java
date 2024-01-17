@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserFindService {
     private final UserRepository userRepository;
 
-    public boolean existByEmail(final String email) {
-        return userRepository.existByEmail(email);
+    public boolean existsByEmail(final String email) {
+        return userRepository.existsByEmail(email);
     }
 }

@@ -1,8 +1,6 @@
 package com.wevel.wevel_server.user;
 
 
-import com.wevel.wevel_server.entity.Users;
-import com.wevel.wevel_server.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,4 +27,5 @@ public class User {
         this.name = name;
         this.email = email;
     }
+
 }

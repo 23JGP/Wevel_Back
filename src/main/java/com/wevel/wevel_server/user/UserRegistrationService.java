@@ -8,11 +8,12 @@ import org.springframework.stereotype.Service;
 public class UserRegistrationService {
     private final UserFindService userFindService;
     private final UserRepository userRepository;
+
     public void requestRegistration(
             final String name,
             final String email
     ){
-      final boolean exists = userFindService.existByEmail(email);
+      final boolean exists = userFindService.existsByEmail(email);
 
       if(exists == false) {
           final User user = new User(name, email);
