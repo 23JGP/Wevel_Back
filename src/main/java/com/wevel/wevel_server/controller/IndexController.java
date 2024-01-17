@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class IndexController {
 
     @GetMapping("/")
-    public OAuth2AuthenticationToken home(final OAuth2AuthenticationToken token){
+    public String home(){
+        return "redirect:http://172.18.48.1:5500/index.html";
+    }
+    @GetMapping("/toekn")
+    public OAuth2AuthenticationToken toekn(final OAuth2AuthenticationToken token){
         return token;
     }
 

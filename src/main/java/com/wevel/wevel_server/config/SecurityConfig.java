@@ -1,6 +1,7 @@
 package com.wevel.wevel_server.config;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.EnvironmentAware;
@@ -38,6 +39,10 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
     private final FaceBookOAuth2UserService faceBookOAuth2UserService;
     private final GoogleOAuth2UserService googleOAuth2UserService;
 
+    @Autowired
+    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         web
@@ -65,6 +70,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                                 .oidcUserService(googleOAuth2UserService) // google 인증 , OpenId Connect 1.0
                                 .userService(faceBookOAuth2UserService) // facebook 인증, OAuth2 통신
                         )
+                        .successHandler(customAuthenticationSuccessHandler)
                 );
     }
 
