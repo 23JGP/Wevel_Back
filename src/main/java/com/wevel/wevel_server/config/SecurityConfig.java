@@ -8,6 +8,7 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -39,10 +40,6 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
     private final FaceBookOAuth2UserService faceBookOAuth2UserService;
     private final GoogleOAuth2UserService googleOAuth2UserService;
 
-    @Autowired
-    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-
-
     @Override
     public void configure(WebSecurity web) throws Exception {
         web
@@ -70,8 +67,12 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                                 .oidcUserService(googleOAuth2UserService) // google 인증 , OpenId Connect 1.0
                                 .userService(faceBookOAuth2UserService) // facebook 인증, OAuth2 통신
                         )
-                        .successHandler(customAuthenticationSuccessHandler)
                 );
+    }
+
+    @Override
+    public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {
+        System.out.println("success");
     }
 
     @Bean
