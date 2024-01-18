@@ -33,6 +33,4 @@ public class ReceiptController {
         return new ResponseEntity<>(receiptDTOList, HttpStatus.OK);
     }
 
-    // Other controller methods
-
 }

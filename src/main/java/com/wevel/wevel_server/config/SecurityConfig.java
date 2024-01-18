@@ -57,7 +57,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
         http
                 .authorizeRequests(authorize -> authorize
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
-                        .requestMatchers("/api/receipts/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf
@@ -86,7 +86,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
     @Bean
     public WebSecurityCustomizer configureApiReceipts() {
         return web -> web.ignoring()
-                .requestMatchers("/api/receipts/**");
+                .requestMatchers("/api/**");
     }
 
 
