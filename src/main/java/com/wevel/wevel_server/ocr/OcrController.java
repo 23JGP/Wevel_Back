@@ -1,6 +1,5 @@
-package com.wevel.wevel_server.controller;
+package com.wevel.wevel_server.ocr;
 
-import com.wevel.wevel_server.service.OcrService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

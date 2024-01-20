@@ -1,4 +1,4 @@
-package com.wevel.wevel_server.entity;
+package com.wevel.wevel_server.receipt.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

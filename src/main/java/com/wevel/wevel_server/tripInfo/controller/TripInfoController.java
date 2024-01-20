@@ -46,7 +46,7 @@ public class TripInfoController {
         return tripService.getLatestTripByUserId(userId).get(0);
     }
 
-    // 홈페이지 -> 사용한 금액 퍼센트화 get = /api/trips/latest/:id/spentPercentage
+    // ____ -> 사용한 금액 퍼센트화 get = /api/trips/latest/:id/spentPercentage
     @GetMapping("/latest/{userId}/spentPercentage")
     public ResponseEntity<SpentPercentageResponse> getSpentPercentageByUserId(@PathVariable Long userId) {
         List<TripInfo> recentTrips = tripService.getLatestTripByUserId(userId);

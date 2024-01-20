@@ -1,6 +1,6 @@
-package com.wevel.wevel_server.repository;
+package com.wevel.wevel_server.receipt.repository;
 
-import com.wevel.wevel_server.entity.Receipt;
+import com.wevel.wevel_server.receipt.entity.Receipt;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package com.wevel.wevel_server.controller;
+package com.wevel.wevel_server.user;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
