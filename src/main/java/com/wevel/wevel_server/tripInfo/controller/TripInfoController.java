@@ -2,6 +2,7 @@ package com.wevel.wevel_server.tripInfo.controller;
 
 import com.wevel.wevel_server.tripInfo.entity.TripInfo;
 import com.wevel.wevel_server.tripInfo.repository.TripInfoRepository;
+import com.wevel.wevel_server.tripInfo.service.TripInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,13 +16,16 @@ public class TripInfoController {
 
     @Autowired
     private TripInfoRepository tripInfoRepository;
+    @Autowired
+    private TripInfoService tripService;
+
 
     // 세션에서 사용자의 userId 가져오는 메서드
     private Long getCurrentUserId() {
         return (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    // 여행 정보 생성
+    // 여행 탭 -> 폴더추가 -> 여행 정보 추가하기 : post = /api/trips/create
     @PostMapping("/create")
     public ResponseEntity<TripInfo> createTripInfo(@RequestBody TripInfo tripInfo) {
         // 세션에서 사용자의 userId 가져오기
@@ -34,14 +38,19 @@ public class TripInfoController {
         return ResponseEntity.ok(createdTripInfo);
     }
 
+    // 홈페이지 -> 유저아이디와 현재 날짜를 입력하면 로그인한 사용자의 최근 여행정보를 가져오기
+    // get = /api/trips/latest:userId
+    @GetMapping("/latest/{userId}")
+    public TripInfo getLatestTripByUserId(@PathVariable Long userId) {
+        return tripService.getLatestTripByUserId(userId).get(0);
+    }
 
 
 
-
-//
+    // TODO : 수정 예정 -> 유저 아이디 추가
     // 모든 여행 목록 조회
     @GetMapping
-    public List<TripInfo> getAllTrips(@PathVariable Long userId) {
+    public List<TripInfo> getAllTrips(@PathVariable("userId") Long userId) {
         return tripInfoRepository.findAll();
     }
 

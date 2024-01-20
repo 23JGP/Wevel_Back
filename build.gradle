@@ -17,6 +17,8 @@ configurations {
 	}
 }
 
+compileJava {	options.compilerArgs << '-parameters'}
+
 repositories {
 	mavenCentral()
 }
