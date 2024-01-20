@@ -1,5 +1,6 @@
 package com.wevel.wevel_server.tripInfo.controller;
 
+import com.wevel.wevel_server.tripInfo.dto.SpentPercentageResponse;
 import com.wevel.wevel_server.tripInfo.entity.TripInfo;
 import com.wevel.wevel_server.tripInfo.repository.TripInfoRepository;
 import com.wevel.wevel_server.tripInfo.service.TripInfoService;
@@ -45,7 +46,30 @@ public class TripInfoController {
         return tripService.getLatestTripByUserId(userId).get(0);
     }
 
+    // 홈페이지 -> 사용한 금액 퍼센트화 get = /api/trips/latest/:id/spentPercentage
+    @GetMapping("/latest/{userId}/spentPercentage")
+    public ResponseEntity<SpentPercentageResponse> getSpentPercentageByUserId(@PathVariable Long userId) {
+        List<TripInfo> recentTrips = tripService.getLatestTripByUserId(userId);
 
+        if (!recentTrips.isEmpty()) {
+            TripInfo mostRecentTrip = recentTrips.get(0);
+
+            if (mostRecentTrip.getTotalBudget() != null && mostRecentTrip.getSpentAmount() != null) {
+                double totalBudget = mostRecentTrip.getTotalBudget();
+                double spentAmount = mostRecentTrip.getSpentAmount();
+
+                double spentPercentage = (spentAmount / totalBudget) * 100;
+
+                // SpentPercentageResponse 객체를 생성하여 JSON으로 반환
+                SpentPercentageResponse response = new SpentPercentageResponse(spentPercentage);
+                return ResponseEntity.ok(response);
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     // TODO : 수정 예정 -> 유저 아이디 추가
     // 모든 여행 목록 조회
