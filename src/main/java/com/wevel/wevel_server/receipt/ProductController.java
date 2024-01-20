@@ -1,6 +1,6 @@
-package com.wevel.wevel_server.controller;
+package com.wevel.wevel_server.receipt;
 
-import com.wevel.wevel_server.dto.Product;
+import com.wevel.wevel_server.receipt.dto.Product;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

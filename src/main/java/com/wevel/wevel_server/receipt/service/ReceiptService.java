@@ -1,8 +1,8 @@
-package com.wevel.wevel_server.service;
+package com.wevel.wevel_server.receipt.service;
 
-import com.wevel.wevel_server.dto.ReceiptDTO;
-import com.wevel.wevel_server.entity.Receipt;
-import com.wevel.wevel_server.repository.ReceiptRepository;
+import com.wevel.wevel_server.receipt.dto.ReceiptDTO;
+import com.wevel.wevel_server.receipt.entity.Receipt;
+import com.wevel.wevel_server.receipt.repository.ReceiptRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

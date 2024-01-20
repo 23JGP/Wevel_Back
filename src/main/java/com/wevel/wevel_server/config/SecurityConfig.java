@@ -46,7 +46,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .ignoring()
                 .requestMatchers("/resources/**")
                 .requestMatchers("/h2-console/**")
-                .requestMatchers("/api/receipts/**");
+                .requestMatchers("/api/**");
     }
 
     @Override

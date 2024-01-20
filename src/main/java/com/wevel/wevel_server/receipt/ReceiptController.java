@@ -1,6 +1,6 @@
-package com.wevel.wevel_server.controller;
-import com.wevel.wevel_server.dto.ReceiptDTO;
-import com.wevel.wevel_server.service.ReceiptService;
+package com.wevel.wevel_server.receipt;
+import com.wevel.wevel_server.receipt.dto.ReceiptDTO;
+import com.wevel.wevel_server.receipt.service.ReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
