@@ -18,4 +18,20 @@ public class TripInfoService {
         Date currentDate = new Date();
         return tripInfoRepository.findByUserIdAndStartDateBeforeOrderByStartDateDesc(userId, currentDate);
     }
+
+    public List<TripInfo> getTripInfoByUserId(Long userId, String orderBy) {
+        switch (orderBy) {
+            case "recent":
+                return tripInfoRepository.findByUserIdOrderByStartDateDesc(userId);
+            case "oldest":
+                return tripInfoRepository.findByUserIdOrderByStartDateAsc(userId);
+            case "asc":
+                return tripInfoRepository.findByUserIdOrderByTripNameAsc(userId);
+            case "desc":
+                return tripInfoRepository.findByUserIdOrderByTripNameDesc(userId);
+            default:
+                throw new IllegalArgumentException("유효하지 않은 orderBy 매개변수입니다");
+        }
+    }
+
 }
