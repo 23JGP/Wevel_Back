@@ -1,5 +1,6 @@
 package com.wevel.wevel_server.memo.entity;
 
+import com.wevel.wevel_server.receipt.entity.Receipt;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,8 +26,10 @@ public class Memo {
     @Column
     private String tripName;
 
-    @Column
-    private Long receiptId;
+    @ManyToOne(targetEntity = Receipt.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "receipt_id", insertable = false, updatable = false)
+    private Receipt receipt;  // Receipt 엔터티와의 조인을 위한 필드
+
 
     @Column
     private Date date;
@@ -42,4 +45,8 @@ public class Memo {
 
     @Column(nullable = true)
     private Boolean Gcompleted;
+
+    public Memo(Long userId, String tripName, Long receipt_id, Date date, String amountReceived, String amountGiven, Object o, Object o1) {
+    }
+
 }

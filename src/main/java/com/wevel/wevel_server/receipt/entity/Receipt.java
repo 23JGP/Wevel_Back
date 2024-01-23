@@ -1,15 +1,18 @@
 package com.wevel.wevel_server.receipt.entity;
 
+import com.wevel.wevel_server.memo.entity.Memo;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Builder
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
 public class Receipt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,22 +28,16 @@ public class Receipt {
     @Column
     private String title;
 
-    @Column
-    private String productName;
+        @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products;
+
+    @OneToOne(mappedBy = "receipt", cascade = CascadeType.ALL)
+    private Memo memo;
 
     @Column
-    private Long price;
-
-    @Column
-    private Integer quantity;
-
-    @Column
-    private Integer tax;
+    private int tax;
 
     @Column
     private Date date;
 
-    public Receipt() {
-        // 기본 생성자 추가
-    }
 }
