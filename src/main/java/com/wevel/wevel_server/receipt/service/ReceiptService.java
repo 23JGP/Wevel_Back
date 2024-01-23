@@ -25,7 +25,7 @@ public class ReceiptService {
     @Autowired
     private MemoRepository memoRepository;
 
-    @Transactional
+
     public Receipt saveReceipt(ReceiptDTO receiptDTO) {
         log.info("ReceiptDTO userId: {}", receiptDTO.getUserId());
         try {

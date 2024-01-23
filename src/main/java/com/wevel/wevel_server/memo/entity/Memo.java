@@ -1,13 +1,16 @@
 package com.wevel.wevel_server.memo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.wevel.wevel_server.receipt.entity.Receipt;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.util.Date;
+
 
 @Entity
 @Getter
@@ -26,6 +29,7 @@ public class Memo {
     @Column
     private String tripName;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receipt_id")
     private Receipt receipt;
