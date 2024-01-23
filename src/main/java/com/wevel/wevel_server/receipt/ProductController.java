@@ -16,16 +16,6 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    // 상품 목록 조회
-    @GetMapping
-    public List<ProductDTO> getAllProducts() {
-        // Product 엔티티를 ProductDTO로 변환하여 반환
-        List<Product> products = productService.getAllProducts();
-        return products.stream()
-                .map(product -> new ProductDTO(product.getProductName(), product.getQuantity(), product.getPrice()))
-                .collect(Collectors.toList());
-    }
-
     // 상품 추가
     @PostMapping("/add")
     public ProductDTO addProduct(@RequestBody ProductDTO productDTO) {
@@ -80,24 +70,6 @@ public class ProductController {
         return productDTOS.stream()
                 .map(productDTO -> String.format("{\"productName\": \"%s\", \"quantity\": %d, \"price\": %.2f}",
                         productDTO.getProductName(), productDTO.getQuantity(), productDTO.getPrice()))
-                .collect(Collectors.toList());
-    }
-
-    // 여러 상품을 추가하는 기능
-    @PostMapping("/add-multiple")
-    public List<ProductDTO> addMultipleProducts(@RequestBody List<ProductDTO> productDTOs) {
-        // 각 ProductDTO를 Product 엔티티로 변환하여 서비스로 전달하고 추가된 상품들을 다시 DTO로 변환하여 반환
-        return productDTOs.stream()
-                .map(productDTO -> {
-                    Product product = new Product();
-                    product.setProductName(productDTO.getProductName());
-                    product.setQuantity(productDTO.getQuantity());
-                    product.setPrice(productDTO.getPrice());
-
-                    Product addedProduct = productService.addProduct(product);
-
-                    return new ProductDTO(addedProduct.getProductName(), addedProduct.getQuantity(), addedProduct.getPrice());
-                })
                 .collect(Collectors.toList());
     }
 }
