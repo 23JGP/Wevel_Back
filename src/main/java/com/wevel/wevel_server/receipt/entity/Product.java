@@ -10,8 +10,8 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,15 @@ public class Product {
     @Column
     private int quantity;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receipt_id")
     private Receipt receipt;
+
+    // 생성자 수정
+    public Product(String productName, double price, int quantity, Receipt receipt) {
+        this.productName = productName;
+        this.price = price;
+        this.quantity = quantity;
+        this.receipt = receipt;
+    }
 }

@@ -7,12 +7,12 @@ import lombok.*;
 import java.util.Date;
 import java.util.List;
 
-@Builder
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Receipt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class Receipt {
     @Column
     private String title;
 
-        @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products;
 
     @OneToOne(mappedBy = "receipt", cascade = CascadeType.ALL)
@@ -39,5 +39,5 @@ public class Receipt {
 
     @Column
     private Date date;
-
 }
+

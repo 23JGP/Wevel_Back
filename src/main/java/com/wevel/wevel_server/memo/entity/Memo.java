@@ -26,10 +26,9 @@ public class Memo {
     @Column
     private String tripName;
 
-    @ManyToOne(targetEntity = Receipt.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "receipt_id", insertable = false, updatable = false)
-    private Receipt receipt;  // Receipt 엔터티와의 조인을 위한 필드
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receipt_id")
+    private Receipt receipt;
 
     @Column
     private Date date;
@@ -46,7 +45,15 @@ public class Memo {
     @Column(nullable = true)
     private Boolean Gcompleted;
 
-    public Memo(Long userId, String tripName, Long receipt_id, Date date, String amountReceived, String amountGiven, Object o, Object o1) {
+    // 생성자 수정
+    public Memo(Long userId, String tripName, Receipt receipt, Date date, String receivedMemos, String givenMemos, Object o, Object o1) {
+        this.userId = userId;
+        this.tripName = tripName;
+        this.receipt = receipt;
+        this.date = date;
+        this.amountReceived = receivedMemos;
+        this.amountGiven = givenMemos;
+        this.Rcompleted = false;
+        this.Gcompleted = false;
     }
-
 }
