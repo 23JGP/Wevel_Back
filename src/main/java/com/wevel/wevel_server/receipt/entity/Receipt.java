@@ -3,6 +3,8 @@ package com.wevel.wevel_server.receipt.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @Builder
 @Entity
 @Getter
@@ -18,7 +20,7 @@ public class Receipt {
     private Long userId;
 
     @Column
-    private Long tripId;
+    private String tripName;
 
     @Column
     private String title;
@@ -34,6 +36,9 @@ public class Receipt {
 
     @Column
     private Integer tax;
+
+    @Column
+    private Date date;
 
     public Receipt() {
         // 기본 생성자 추가
