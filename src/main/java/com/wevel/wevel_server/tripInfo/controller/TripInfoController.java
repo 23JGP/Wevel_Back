@@ -1,6 +1,7 @@
 package com.wevel.wevel_server.tripInfo.controller;
 
 import com.wevel.wevel_server.tripInfo.dto.SpentPercentageResponse;
+import com.wevel.wevel_server.tripInfo.dto.TripInfoDTO;
 import com.wevel.wevel_server.tripInfo.entity.TripInfo;
 import com.wevel.wevel_server.tripInfo.repository.TripInfoRepository;
 import com.wevel.wevel_server.tripInfo.service.TripInfoService;
@@ -69,6 +70,24 @@ public class TripInfoController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    // 여행페이지 -> 유저아이디를 입력받으면 최근순, 오래된 순, 오름 차순 , 내림차순으로 정렬
+    // 최근 순 : get = /api/trips/trip-info/:userId?orderBy=recent
+    // 오래된 순 : get = /api/trips/trip-info/:userId?orderBy=oldest
+    // 오름차순 : get = /api/trips/trip-info/:userId?orderBy=asc
+    // 내림차순 : get = /api/trips/trip-info/:userId?orderBy=desc
+    @GetMapping("/trip-info/{userId}")
+    public List<TripInfoDTO> getTripInfoByUserId(@PathVariable Long userId,
+                                                 @RequestParam(defaultValue = "recent") String orderBy) {
+        return tripService.getTripInfoByUserId(userId, orderBy);
+    }
+
+    @PutMapping("/trip-info/{userId}/{tripId}")
+    public TripInfoDTO updateTripInfo(@PathVariable Long userId,
+                                      @PathVariable Long tripId,
+                                      @RequestBody TripInfoDTO updatedTripInfoDTO) {
+        return tripService.updateTripInfo(userId, tripId, updatedTripInfoDTO);
     }
 
     // TODO : 수정 예정 -> 유저 아이디 추가

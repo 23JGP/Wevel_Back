@@ -1,5 +1,6 @@
 package com.wevel.wevel_server.receipt;
 import com.wevel.wevel_server.receipt.dto.ReceiptDTO;
+import com.wevel.wevel_server.receipt.entity.Receipt;
 import com.wevel.wevel_server.receipt.service.ReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,21 +17,8 @@ public class ReceiptController {
     private ReceiptService receiptService;
 
     @PostMapping
-    public ResponseEntity<ReceiptDTO> createReceipt(@RequestBody ReceiptDTO receiptDTO) {
-        ReceiptDTO createdReceipt = receiptService.createReceipt(receiptDTO);
-        return new ResponseEntity<>(createdReceipt, HttpStatus.CREATED);
+    public ResponseEntity<Receipt> saveReceipt(@RequestBody ReceiptDTO receiptDTO) {
+        Receipt savedReceipt = receiptService.saveReceipt(receiptDTO);
+        return new ResponseEntity<>(savedReceipt, HttpStatus.CREATED);
     }
-
-    @GetMapping("/{receiptId}")
-    public ResponseEntity<ReceiptDTO> getReceiptById(@PathVariable Long receiptId) {
-        ReceiptDTO receiptDTO = receiptService.getReceiptById(receiptId);
-        return new ResponseEntity<>(receiptDTO, HttpStatus.OK);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<ReceiptDTO>> getAllReceipts() {
-        List<ReceiptDTO> receiptDTOList = receiptService.getAllReceipts();
-        return new ResponseEntity<>(receiptDTOList, HttpStatus.OK);
-    }
-
 }

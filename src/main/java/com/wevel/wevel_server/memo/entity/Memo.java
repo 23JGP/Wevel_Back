@@ -1,12 +1,16 @@
 package com.wevel.wevel_server.memo.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.wevel.wevel_server.receipt.entity.Receipt;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.minidev.json.annotate.JsonIgnore;
 
 import java.util.Date;
+
 
 @Entity
 @Getter
@@ -25,8 +29,10 @@ public class Memo {
     @Column
     private String tripName;
 
-    @Column
-    private Long receiptId;
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receipt_id")
+    private Receipt receipt;
 
     @Column
     private Date date;
@@ -42,4 +48,16 @@ public class Memo {
 
     @Column(nullable = true)
     private Boolean Gcompleted;
+
+    // 생성자 수정
+    public Memo(Long userId, String tripName, Receipt receipt, Date date, String receivedMemos, String givenMemos, Object o, Object o1) {
+        this.userId = userId;
+        this.tripName = tripName;
+        this.receipt = receipt;
+        this.date = date;
+        this.amountReceived = receivedMemos;
+        this.amountGiven = givenMemos;
+        this.Rcompleted = false;
+        this.Gcompleted = false;
+    }
 }
