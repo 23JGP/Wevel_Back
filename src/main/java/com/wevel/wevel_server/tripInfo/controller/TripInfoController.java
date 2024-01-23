@@ -1,6 +1,7 @@
 package com.wevel.wevel_server.tripInfo.controller;
 
 import com.wevel.wevel_server.tripInfo.dto.SpentPercentageResponse;
+import com.wevel.wevel_server.tripInfo.dto.TripInfoDTO;
 import com.wevel.wevel_server.tripInfo.entity.TripInfo;
 import com.wevel.wevel_server.tripInfo.repository.TripInfoRepository;
 import com.wevel.wevel_server.tripInfo.service.TripInfoService;
@@ -77,8 +78,8 @@ public class TripInfoController {
     // 오름차순 : get = /api/trips/trip-info/:userId?orderBy=asc
     // 내림차순 : get = /api/trips/trip-info/:userId?orderBy=desc
     @GetMapping("/trip-info/{userId}")
-    public List<TripInfo> getTripInfoByUserId(@PathVariable Long userId,
-                                              @RequestParam(defaultValue = "recent") String orderBy) {
+    public List<TripInfoDTO> getTripInfoByUserId(@PathVariable Long userId,
+                                                 @RequestParam(defaultValue = "recent") String orderBy) {
         return tripService.getTripInfoByUserId(userId, orderBy);
     }
 
