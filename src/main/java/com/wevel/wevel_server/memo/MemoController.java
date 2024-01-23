@@ -1,6 +1,7 @@
 package com.wevel.wevel_server.memo;
 
 import com.wevel.wevel_server.memo.dto.GivenMemoResponse;
+import com.wevel.wevel_server.memo.dto.MemoAllResponse;
 import com.wevel.wevel_server.memo.dto.MemoResponse;
 import com.wevel.wevel_server.memo.dto.ReceivedMemoResponse;
 import com.wevel.wevel_server.memo.repository.MemoRepository;
@@ -28,19 +29,28 @@ public class MemoController {
     }
 
     // 홈페이지에서 전체 메모 불러오기 get = /api/memo/all/:id/:tripName
+    // TODO : 성공하면 메모 삭제 기능 추가
+//    @GetMapping("/all/{userId}/{tripName}")
+//    public List<MemoResponse> getMemoDetails(@PathVariable Long userId, @PathVariable String tripName) {
+//        return memoService.getMemoDetails(userId, tripName);
+//    }
+
     @GetMapping("/all/{userId}/{tripName}")
-    public List<MemoResponse> getMemoDetails(@PathVariable Long userId, @PathVariable String tripName) {
-        return memoService.getMemoDetails(userId, tripName);
+    public MemoAllResponse getCombinedMemos(@PathVariable Long userId, @PathVariable String tripName) {
+        List<GivenMemoResponse> givenMemos = memoService.getMemoGiven(userId, tripName);
+        List<ReceivedMemoResponse> receivedMemos = memoService.getMemoReceived(userId, tripName);
+
+        return new MemoAllResponse(givenMemos, receivedMemos);
     }
 
     // 홈페이지에서 줘야하는 돈 메모 불러오기 get = /api/memo/given/:id/:tripName
-    @GetMapping("/given/{userId}/{tripName}")
+    @GetMapping("/give/{userId}/{tripName}")
     public List<GivenMemoResponse> getGivenMemos(@PathVariable Long userId, @PathVariable String tripName) {
         return memoService.getMemoGiven(userId, tripName);
     }
 
     // 홈페이지에서 받아야하는 돈 메모 불러오기 get = /api/memo/received/:id/:tripName
-    @GetMapping("/received/{userId}/{tripName}")
+    @GetMapping("/receive/{userId}/{tripName}")
     public List<ReceivedMemoResponse> getReceived(@PathVariable Long userId, @PathVariable String tripName) {
         return memoService.getMemoReceived(userId, tripName);
     }

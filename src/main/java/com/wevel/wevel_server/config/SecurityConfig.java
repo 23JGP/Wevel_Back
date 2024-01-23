@@ -23,6 +23,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
 import java.util.Arrays;
 import java.util.List;
@@ -69,6 +70,13 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                                 .oidcUserService(googleOAuth2UserService) // google 인증 , OpenId Connect 1.0
                                 .userService(faceBookOAuth2UserService) // facebook 인증, OAuth2 통신
                         )
+                        .successHandler((request, response, authentication) -> {
+                            // 로그인 성공 시 리다이렉션할 URL 설정
+                            SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler();
+                            successHandler.setDefaultTargetUrl("http://localhost:3000/index.html");
+                            successHandler.onAuthenticationSuccess(request, response, authentication);
+                        })
+                        .defaultSuccessUrl("http://localhost:3000/index.html", true) // defaultSuccessURL 설정
                 );
     }
 
