@@ -56,6 +56,30 @@ public class TripInfoService {
         return tripInfoDTOs;
     }
 
+
+    public TripInfoDTO updateTripInfo(Long userId, Long tripId, TripInfoDTO updatedTripInfoDTO) {
+        TripInfo tripInfo = tripInfoRepository.findByUserIdAndTripId(userId, tripId)
+                .orElseThrow(() -> new IllegalArgumentException("TripInfo not found for userId: " + userId + " and tripId: " + tripId));
+
+        // Update the fields if provided in the request
+        if (updatedTripInfoDTO.getTripName() != null) {
+            tripInfo.setTripName(updatedTripInfoDTO.getTripName());
+        }
+        if (updatedTripInfoDTO.getStartDate() != null) {
+            tripInfo.setStartDate(updatedTripInfoDTO.getStartDate());
+        }
+        if (updatedTripInfoDTO.getEndDate() != null) {
+            tripInfo.setEndDate(updatedTripInfoDTO.getEndDate());
+        }
+        if (updatedTripInfoDTO.getTotalBudget() != null) {
+            tripInfo.setTotalBudget(updatedTripInfoDTO.getTotalBudget());
+        }
+
+        tripInfo = tripInfoRepository.save(tripInfo);
+
+        return convertToDTO(tripInfo);
+    }
+
     private TripInfoDTO convertToDTO(TripInfo tripInfo) {
         return new TripInfoDTO(
                 tripInfo.getTripName(),

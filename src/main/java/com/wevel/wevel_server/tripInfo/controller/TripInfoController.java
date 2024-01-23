@@ -83,6 +83,13 @@ public class TripInfoController {
         return tripService.getTripInfoByUserId(userId, orderBy);
     }
 
+    @PutMapping("/trip-info/{userId}/{tripId}")
+    public TripInfoDTO updateTripInfo(@PathVariable Long userId,
+                                      @PathVariable Long tripId,
+                                      @RequestBody TripInfoDTO updatedTripInfoDTO) {
+        return tripService.updateTripInfo(userId, tripId, updatedTripInfoDTO);
+    }
+
     // TODO : 수정 예정 -> 유저 아이디 추가
     // 모든 여행 목록 조회
     @GetMapping
