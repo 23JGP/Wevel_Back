@@ -4,6 +4,8 @@ import com.wevel.wevel_server.receipt.dto.ProductDTO;
 import com.wevel.wevel_server.receipt.entity.Product;
 import com.wevel.wevel_server.receipt.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,37 +33,17 @@ public class ProductController {
         return new ProductDTO(addedProduct.getProductName(), addedProduct.getQuantity(), addedProduct.getPrice());
     }
 
-    // 여러 상품을 추가하는 기능
-    @PostMapping("/add-multiple")
-    public List<ProductDTO> addMultipleProducts(@RequestBody List<ProductDTO> productDTOs) {
-        // 각 ProductDTO를 Product 엔티티로 변환하여 서비스로 전달하고 추가된 상품들을 다시 DTO로 변환하여 반환
-        return productDTOs.stream()
-                .map(productDTO -> {
-                    Product product = new Product();
-                    product.setProductName(productDTO.getProductName());
-                    product.setQuantity(productDTO.getQuantity());
-                    product.setPrice(productDTO.getPrice());
-
-                    Product addedProduct = productService.addProduct(product);
-
-                    return new ProductDTO(addedProduct.getProductName(), addedProduct.getQuantity(), addedProduct.getPrice());
-                })
-                .collect(Collectors.toList());
+    @PutMapping("/edit/{productId}")
+    public ResponseEntity<ProductDTO> editProduct(@PathVariable Long productId, @RequestBody ProductDTO editedProductDTO) {
+        // 서비스에서 반환된 수정된 ProductDTO를 ResponseEntity로 반환
+        ProductDTO updatedProductDTO = productService.editProduct(productId, editedProductDTO);
+        if (updatedProductDTO != null) {
+            return new ResponseEntity<>(updatedProductDTO, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-
-    // 상품 수정
-    @PostMapping("/edit/{productId}")
-    public Product editProduct(@PathVariable Long productId, @RequestBody ProductDTO editedProductDTO) {
-        // ProductDTO를 Product 엔티티로 변환하여 서비스로 전달
-        Product editedProduct = new Product();
-        editedProduct.setProductName(editedProductDTO.getProductName());
-        editedProduct.setQuantity(editedProductDTO.getQuantity());
-        editedProduct.setPrice(editedProductDTO.getPrice());
-
-        // 서비스에서 반환된 수정된 Product 엔티티를 ProductDTO로 변환하여 반환
-        return productService.editProduct(productId, editedProduct);
-    }
 
     // 상품 목록을 JSON 문자열 리스트로 생성
     @PostMapping("/list-products")
