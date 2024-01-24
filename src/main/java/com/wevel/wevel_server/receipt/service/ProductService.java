@@ -1,5 +1,6 @@
 package com.wevel.wevel_server.receipt.service;
 
+import com.wevel.wevel_server.receipt.dto.ProductDTO;
 import com.wevel.wevel_server.receipt.entity.Product;
 import com.wevel.wevel_server.receipt.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,19 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product editProduct(Long productId, Product editedProduct) {
+    // ProductService
+    public ProductDTO editProduct(Long productId, ProductDTO editedProductDTO) {
         Product existingProduct = productRepository.findById(productId).orElse(null);
         if (existingProduct != null) {
-            existingProduct.setProductName(editedProduct.getProductName());
-            existingProduct.setQuantity(editedProduct.getQuantity());
-            existingProduct.setPrice(editedProduct.getPrice());
-            return productRepository.save(existingProduct);
+            existingProduct.setProductName(editedProductDTO.getProductName());
+            existingProduct.setQuantity(editedProductDTO.getQuantity());
+            existingProduct.setPrice(editedProductDTO.getPrice());
+            Product updatedProduct = productRepository.save(existingProduct);
+
+            // 수정된 Product 엔티티를 ProductDTO로 변환하여 반환
+            return new ProductDTO(updatedProduct.getProductName(), updatedProduct.getQuantity(), updatedProduct.getPrice());
         }
         return null;
     }
+
 }
