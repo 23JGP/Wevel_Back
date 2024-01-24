@@ -36,5 +36,8 @@ public class ProductService {
         }
         return null;
     }
+    public void deleteProduct(Long productId) {
+        productRepository.deleteById(productId);
+    }
 
 }

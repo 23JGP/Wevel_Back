@@ -43,7 +43,11 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
+    @DeleteMapping("/delete/{productId}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Long productId) {
+        productService.deleteProduct(productId);
+        return new ResponseEntity<>("Product deleted successfully", HttpStatus.OK);
+    }
 
     // 상품 목록을 JSON 문자열 리스트로 생성
     @PostMapping("/list-products")
