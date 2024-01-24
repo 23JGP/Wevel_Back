@@ -6,11 +6,15 @@ import com.wevel.wevel_server.tripInfo.entity.TripInfo;
 import com.wevel.wevel_server.tripInfo.repository.TripInfoRepository;
 import com.wevel.wevel_server.tripInfo.service.TripInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/trips")
@@ -42,35 +46,57 @@ public class TripInfoController {
 
     // 홈페이지 -> 유저아이디와 현재 날짜를 입력하면 로그인한 사용자의 최근 여행정보를 가져오기
     // get = /api/trips/latest:userId
+//    @GetMapping("/latest/{userId}")
+//    public ResponseEntity<TripInfo> getLatestTripByUserId(@PathVariable Long userId) {
+//        try {
+//            List<TripInfo> latestTrips = tripService.getLatestTripByUserId(userId);
+//
+//            if (!latestTrips.isEmpty()) {
+//                return ResponseEntity.ok(latestTrips.get(0));
+//            } else {
+//                return ResponseEntity.notFound().build();
+//            }
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
     @GetMapping("/latest/{userId}")
-    public TripInfo getLatestTripByUserId(@PathVariable Long userId) {
-        return tripService.getLatestTripByUserId(userId).get(0);
-    }
-
-    // ____ -> 사용한 금액 퍼센트화 get = /api/trips/latest/:id/spentPercentage
-    @GetMapping("/latest/{userId}/spentPercentage")
-    public ResponseEntity<SpentPercentageResponse> getSpentPercentageByUserId(@PathVariable Long userId) {
-        List<TripInfo> recentTrips = tripService.getLatestTripByUserId(userId);
-
+    public TripInfo getRecentTripByUserId(@PathVariable Long userId) {
+        List<TripInfo> recentTrips = tripService.getRecentTripsByUserId(userId);
         if (!recentTrips.isEmpty()) {
-            TripInfo mostRecentTrip = recentTrips.get(0);
-
-            if (mostRecentTrip.getTotalBudget() != null && mostRecentTrip.getSpentAmount() != null) {
-                double totalBudget = mostRecentTrip.getTotalBudget();
-                double spentAmount = mostRecentTrip.getSpentAmount();
-
-                double spentPercentage = (spentAmount / totalBudget) * 100;
-
-                // SpentPercentageResponse 객체를 생성하여 JSON으로 반환
-                SpentPercentageResponse response = new SpentPercentageResponse(spentPercentage);
-                return ResponseEntity.ok(response);
-            } else {
-                return ResponseEntity.badRequest().build();
-            }
+            // 여러 개의 여행 정보가 있다면 가장 최근 것 하나만 반환
+            return recentTrips.get(0);
         } else {
-            return ResponseEntity.notFound().build();
+            // 여행 정보가 없을 경우 null
+            return null;
         }
     }
+
+
+    // ____ -> 사용한 금액 퍼센트화 get = /api/trips/latest/:id/spentPercentage
+//    @GetMapping("/latest/{userId}/spentPercentage")
+//    public ResponseEntity<SpentPercentageResponse> getSpentPercentageByUserId(@PathVariable Long userId) {
+//        List<TripInfo> recentTrips = tripService.getLatestTripByUserId(userId);
+//
+//        if (!recentTrips.isEmpty()) {
+//            TripInfo mostRecentTrip = recentTrips.get(0);
+//
+//            if (mostRecentTrip.getTotalBudget() != null && mostRecentTrip.getSpentAmount() != null) {
+//                double totalBudget = mostRecentTrip.getTotalBudget();
+//                double spentAmount = mostRecentTrip.getSpentAmount();
+//
+//                double spentPercentage = (spentAmount / totalBudget) * 100;
+//
+//                // SpentPercentageResponse 객체를 생성하여 JSON으로 반환
+//                SpentPercentageResponse response = new SpentPercentageResponse(spentPercentage);
+//                return ResponseEntity.ok(response);
+//            } else {
+//                return ResponseEntity.badRequest().build();
+//            }
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
     // 여행페이지 -> 유저아이디를 입력받으면 최근순, 오래된 순, 오름 차순 , 내림차순으로 정렬
     // 최근 순 : get = /api/trips/trip-info/:userId?orderBy=recent

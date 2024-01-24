@@ -7,6 +7,8 @@ import com.wevel.wevel_server.tripInfo.repository.TripInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,9 +18,19 @@ public class TripInfoService {
     @Autowired
     private TripInfoRepository tripInfoRepository;
 
-    public List<TripInfo> getLatestTripByUserId(Long userId) {
-        Date currentDate = new Date();
-        return tripInfoRepository.findByUserIdAndStartDateBeforeOrderByStartDateDesc(userId, currentDate);
+//    public List<TripInfo> getLatestTripByUserId(Long userId) {
+//        try {
+//            Date currentDate = new Date();
+//            return tripInfoRepository.findByUserIdAndStartDateBeforeOrderByStartDateDesc(userId, currentDate);
+//        } catch (Exception e) {
+//            // 예외 로깅 또는 처리
+//            e.printStackTrace();
+//            return Collections.emptyList();
+//        }
+//    }
+
+    public List<TripInfo> getRecentTripsByUserId(Long userId) {
+        return tripInfoRepository.findByUserIdOrderByStartDateDesc(userId);
     }
 
     public List<TripInfoDTO> getTripInfoByUserId(Long userId, String orderBy) {
