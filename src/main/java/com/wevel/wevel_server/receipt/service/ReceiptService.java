@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -113,5 +114,21 @@ public class ReceiptService {
 
     public void deleteReceipt(Long receiptId) {
         receiptRepository.deleteById(receiptId);
+    }
+
+    public void updateReceipt(ReceiptDTO receiptDTO) {
+        Optional<Receipt> optionalReceipt = receiptRepository.findById(receiptDTO.getReceiptId());
+        if (optionalReceipt.isPresent()) {
+            Receipt existingReceipt = optionalReceipt.get();
+
+            // 업데이트 로직 수행
+            existingReceipt.setUserId(receiptDTO.getUserId());
+            existingReceipt.setTripName(receiptDTO.getTripName());
+            existingReceipt.setTitle(receiptDTO.getTitle());
+
+            receiptRepository.save(existingReceipt);
+        } else {
+            // 적절한 처리 (예외 처리 등)
+        }
     }
 }
