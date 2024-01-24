@@ -6,6 +6,7 @@ import com.wevel.wevel_server.receipt.dto.ReceiptDTO;
 import com.wevel.wevel_server.receipt.entity.Product;
 import com.wevel.wevel_server.receipt.entity.Receipt;
 import com.wevel.wevel_server.receipt.repository.ReceiptRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,5 +91,27 @@ public class ReceiptService {
         }
 
         return receiptEntity;
+    }
+
+    public List<Receipt> getReceiptsByUserId(Long userId) {
+        return receiptRepository.findByUserId(userId);
+    }
+
+    public Receipt updateReceipt(Long receiptId, Receipt updatedReceipt) {
+        Receipt existingReceipt = receiptRepository.findById(receiptId)
+                .orElseThrow(() -> new EntityNotFoundException("Receipt not found with id: " + receiptId));
+
+        existingReceipt.setTripName(updatedReceipt.getTripName());
+        existingReceipt.setTitle(updatedReceipt.getTitle());
+        existingReceipt.setProducts(updatedReceipt.getProducts());
+        existingReceipt.setMemo(updatedReceipt.getMemo());
+        existingReceipt.setTax(updatedReceipt.getTax());
+        existingReceipt.setDate(updatedReceipt.getDate());
+
+        return receiptRepository.save(existingReceipt);
+    }
+
+    public void deleteReceipt(Long receiptId) {
+        receiptRepository.deleteById(receiptId);
     }
 }

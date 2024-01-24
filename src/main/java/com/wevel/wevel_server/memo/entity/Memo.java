@@ -29,9 +29,10 @@ public class Memo {
     @Column
     private String tripName;
 
+
     @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "receipt_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "receiptId")
     private Receipt receipt;
 
     @Column
@@ -49,7 +50,6 @@ public class Memo {
     @Column(nullable = true)
     private Boolean Gcompleted;
 
-    // 생성자 수정
     public Memo(Long userId, String tripName, Receipt receipt, Date date, String receivedMemos, String givenMemos, Object o, Object o1) {
         this.userId = userId;
         this.tripName = tripName;
@@ -57,7 +57,8 @@ public class Memo {
         this.date = date;
         this.amountReceived = receivedMemos;
         this.amountGiven = givenMemos;
-        this.Rcompleted = false;
-        this.Gcompleted = false;
+        this.Rcompleted = Boolean.FALSE;  // Boolean 타입의 경우 TRUE 또는 FALSE로 설정
+        this.Gcompleted = Boolean.FALSE;  // Boolean 타입의 경우 TRUE 또는 FALSE로 설정
     }
+
 }

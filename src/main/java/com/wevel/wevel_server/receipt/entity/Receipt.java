@@ -1,5 +1,6 @@
 package com.wevel.wevel_server.receipt.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.wevel.wevel_server.memo.entity.Memo;
 import jakarta.persistence.*;
@@ -34,7 +35,7 @@ public class Receipt {
     @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Product> products;
 
-    @JsonManagedReference
+    @JsonBackReference
     @OneToOne(mappedBy = "receipt", cascade = CascadeType.ALL)
     private Memo memo;
 
