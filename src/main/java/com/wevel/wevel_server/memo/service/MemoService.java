@@ -1,6 +1,7 @@
 package com.wevel.wevel_server.memo.service;
 
 import com.wevel.wevel_server.memo.dto.GivenMemoResponse;
+import com.wevel.wevel_server.memo.dto.MemoDTO;
 import com.wevel.wevel_server.memo.dto.ReceivedMemoResponse;
 import com.wevel.wevel_server.memo.entity.Memo;
 import com.wevel.wevel_server.memo.dto.MemoResponse;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,4 +67,22 @@ public class MemoService {
         receivedMemoResponse.setDate(memo.getDate());
         return receivedMemoResponse;
     }
+
+    public void updateMemo(MemoDTO memoDTO) {
+        Optional<Memo> optionalMemo = memoRepository.findById(memoDTO.getMemoId());
+        if (optionalMemo.isPresent()) {
+            Memo existingMemo = optionalMemo.get();
+
+            existingMemo.setTripName(memoDTO.getTripName());
+            existingMemo.setDate(memoDTO.getDate());
+            existingMemo.setAmountGiven(memoDTO.getAmountGiven());
+            existingMemo.setAmountReceived(memoDTO.getAmountReceived());
+
+            // 저장
+            memoRepository.save(existingMemo);
+        } else {
+            // 적절한 처리 (예외 처리 등)
+        }
+    }
+
 }

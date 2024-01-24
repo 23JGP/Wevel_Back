@@ -1,9 +1,6 @@
 package com.wevel.wevel_server.memo;
 
-import com.wevel.wevel_server.memo.dto.GivenMemoResponse;
-import com.wevel.wevel_server.memo.dto.MemoAllResponse;
-import com.wevel.wevel_server.memo.dto.MemoResponse;
-import com.wevel.wevel_server.memo.dto.ReceivedMemoResponse;
+import com.wevel.wevel_server.memo.dto.*;
 import com.wevel.wevel_server.memo.repository.MemoRepository;
 import com.wevel.wevel_server.memo.service.MemoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +24,12 @@ public class MemoController {
         this.memoRepository = memoRepository;
         this.memoService = memoService;
     }
+
+//    @GetMapping("/{memoId}")
+//    public ResponseEntity<MemoDTO> getMemo(@PathVariable Long memoId) {
+//        MemoDTO memoDTO = memoService.getMemoById(memoId);
+//        return ResponseEntity.ok(memoDTO);
+//    }
 
     // 홈페이지에서 전체 메모 불러오기 get = /api/memo/all/:id/:tripName
     // TODO : 성공하면 메모 삭제 기능 추가

@@ -30,7 +30,7 @@ public class Product {
     private int quantity;
 
     @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "receipt_id")
     private Receipt receipt;
 
