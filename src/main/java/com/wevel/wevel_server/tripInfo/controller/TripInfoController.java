@@ -1,5 +1,6 @@
 package com.wevel.wevel_server.tripInfo.controller;
 
+import com.wevel.wevel_server.receipt.service.ReceiptService;
 import com.wevel.wevel_server.tripInfo.dto.SpentPercentageResponse;
 import com.wevel.wevel_server.tripInfo.dto.TripInfoDTO;
 import com.wevel.wevel_server.tripInfo.entity.TripInfo;
@@ -25,6 +26,19 @@ public class TripInfoController {
     @Autowired
     private TripInfoService tripService;
 
+
+    @Autowired
+    private ReceiptService receiptService;
+
+//    @PostMapping("/updateTripInfo")
+//    public ResponseEntity<String> updateTripInfo(@RequestParam Long userId, @RequestParam String tripName) {
+//        try {
+//            receiptService.updateTripInfoWithReceipts(userId, tripName);
+//            return ResponseEntity.ok("TripInfo updated successfully.");
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating TripInfo.");
+//        }
+//    }
 
     // 세션에서 사용자의 userId 가져오는 메서드
     private Long getCurrentUserId() {

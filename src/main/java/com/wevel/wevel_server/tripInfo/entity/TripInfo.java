@@ -1,10 +1,12 @@
 package com.wevel.wevel_server.tripInfo.entity;
 
+import com.wevel.wevel_server.receipt.entity.Receipt;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,8 +21,9 @@ public class TripInfo {
     @Column
     private Long userId;
 
+
     @Column
-    private Long totalBudget;
+    private double totalBudget;
 
     @Column
     private String tripName;
@@ -35,9 +38,9 @@ public class TripInfo {
     private Date endDate;
 
     @Column(nullable = true)
-    private Long spentAmount;
+    private double spentAmount;
 
     @Column(nullable = true)
-    private Long remainingAmount;
+    private double remainingAmount;
 
 }

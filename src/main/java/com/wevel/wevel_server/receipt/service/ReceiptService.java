@@ -6,6 +6,8 @@ import com.wevel.wevel_server.receipt.dto.ReceiptDTO;
 import com.wevel.wevel_server.receipt.entity.Product;
 import com.wevel.wevel_server.receipt.entity.Receipt;
 import com.wevel.wevel_server.receipt.repository.ReceiptRepository;
+import com.wevel.wevel_server.tripInfo.entity.TripInfo;
+import com.wevel.wevel_server.tripInfo.repository.TripInfoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -26,6 +28,53 @@ public class ReceiptService {
 
     @Autowired
     private MemoRepository memoRepository;
+
+    @Autowired
+    private TripInfoRepository tripInfoRepository;
+
+
+
+    private void updateTripInfo(TripInfo tripInfo, Receipt receipt) {
+        // 여행 정보의 총 사용 금액 및 남은 예산 계산
+        double totalSpentAmount = tripInfo.getSpentAmount() != 0 ? tripInfo.getSpentAmount() : 0;
+        double totalBudget = tripInfo.getTotalBudget() != 0 ? tripInfo.getTotalBudget() : 0;
+
+        for (Product product : receipt.getProducts()) {
+            totalSpentAmount += product.getPrice();
+        }
+
+        double remainingAmount = totalBudget - totalSpentAmount;
+
+        // 여행 정보 업데이트
+        tripInfo.setSpentAmount(totalSpentAmount);
+        tripInfo.setRemainingAmount(remainingAmount);
+
+        // 로그 추가
+        System.out.println("Total Spent Amount: " + totalSpentAmount);
+        System.out.println("Remaining Amount: " + remainingAmount);
+
+        tripInfoRepository.save(tripInfo);
+    }
+
+//    public void updateTripInfoWithReceipts(Long userId, String tripName) {
+//        // 단계 1: 특정 사용자 및 여행에 대한 영수증 검색
+//        List<Receipt> receipts = receiptRepository.findByUserIdAndTripName(userId, tripName);
+//
+//        // 단계 2: 각 영수증의 제품에서 가격 합산
+//        double totalSpentAmount = receipts.stream()
+//                .flatMap(receipt -> receipt.getProducts().stream())
+//                .mapToDouble(Product::getPrice) // 수정된 부분
+//                .sum();
+//
+//        // 단계 3: TripInfo 엔터티의 spentAmount 및 remainingAmount 업데이트
+//        TripInfo tripInfo = tripInfoRepository.findByUserIdAndTripName(userId, tripName);
+//        double totalRemainingAmount = tripInfo.getTotalBudget() - totalSpentAmount;
+//
+//        tripInfo.setSpentAmount(totalSpentAmount);
+//        tripInfo.setRemainingAmount(totalRemainingAmount);
+//
+//        tripInfoRepository.save(tripInfo);
+//    }
 
 
     public Receipt saveReceipt(ReceiptDTO receiptDTO) {

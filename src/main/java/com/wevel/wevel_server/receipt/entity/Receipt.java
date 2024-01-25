@@ -3,6 +3,7 @@ package com.wevel.wevel_server.receipt.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.wevel.wevel_server.memo.entity.Memo;
+import com.wevel.wevel_server.tripInfo.entity.TripInfo;
 import jakarta.persistence.*;
 import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;

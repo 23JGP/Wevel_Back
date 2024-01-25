@@ -83,7 +83,7 @@ public class TripInfoService {
         if (updatedTripInfoDTO.getEndDate() != null) {
             tripInfo.setEndDate(updatedTripInfoDTO.getEndDate());
         }
-        if (updatedTripInfoDTO.getTotalBudget() != null) {
+        if (updatedTripInfoDTO.getTotalBudget() != 0) {
             tripInfo.setTotalBudget(updatedTripInfoDTO.getTotalBudget());
         }
 
@@ -102,4 +102,11 @@ public class TripInfoService {
         );
     }
 
+    public TripInfo findTripInfoByUserIdAndTripName(Long userId, String tripName) {
+        return tripInfoRepository.findByUserIdAndTripName(userId, tripName);
+    }
+
+    public void saveTripInfo(TripInfo newTripInfo) {
+        tripInfoRepository.save(newTripInfo);
+    }
 }
