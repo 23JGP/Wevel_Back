@@ -131,4 +131,8 @@ public class ReceiptService {
             // 적절한 처리 (예외 처리 등)
         }
     }
+
+    public List<Receipt> getReceiptsByUserIdAndTripName(Long userId, String tripName) {
+        return receiptRepository.findByUserIdAndTripName(userId, tripName);
+    }
 }

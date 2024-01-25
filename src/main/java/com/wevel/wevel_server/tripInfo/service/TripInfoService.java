@@ -95,6 +95,7 @@ public class TripInfoService {
     private TripInfoDTO convertToDTO(TripInfo tripInfo) {
         return new TripInfoDTO(
                 tripInfo.getTripName(),
+                tripInfo.getCountry(),
                 tripInfo.getTotalBudget(),
                 tripInfo.getStartDate(),
                 tripInfo.getEndDate()

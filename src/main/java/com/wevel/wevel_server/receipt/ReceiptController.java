@@ -71,7 +71,16 @@ public class ReceiptController {
         return new ResponseEntity<>(receipts, HttpStatus.OK);
     }
 
-//    Receipt 수정하기 (PUT API):
+    @GetMapping("/user/{userId}/trip/{tripName}")
+    public ResponseEntity<List<Receipt>> getReceiptsByUserIdAndTripName(
+            @PathVariable Long userId,
+            @PathVariable String tripName) {
+        List<Receipt> receipts = receiptService.getReceiptsByUserIdAndTripName(userId, tripName);
+        return new ResponseEntity<>(receipts, HttpStatus.OK);
+    }
+
+
+    //    Receipt 수정하기 (PUT API):
     @PutMapping("/{receiptId}")
     public ResponseEntity<Receipt> updateReceipt(@PathVariable Long receiptId, @RequestBody Receipt updatedReceipt) {
         Receipt updated = receiptService.updateReceipt(receiptId, updatedReceipt);

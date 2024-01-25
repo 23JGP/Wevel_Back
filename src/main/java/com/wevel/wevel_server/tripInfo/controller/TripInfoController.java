@@ -45,21 +45,6 @@ public class TripInfoController {
     }
 
     // 홈페이지 -> 유저아이디와 현재 날짜를 입력하면 로그인한 사용자의 최근 여행정보를 가져오기
-    // get = /api/trips/latest:userId
-//    @GetMapping("/latest/{userId}")
-//    public ResponseEntity<TripInfo> getLatestTripByUserId(@PathVariable Long userId) {
-//        try {
-//            List<TripInfo> latestTrips = tripService.getLatestTripByUserId(userId);
-//
-//            if (!latestTrips.isEmpty()) {
-//                return ResponseEntity.ok(latestTrips.get(0));
-//            } else {
-//                return ResponseEntity.notFound().build();
-//            }
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        }
-//    }
     @GetMapping("/latest/{userId}")
     public TripInfo getRecentTripByUserId(@PathVariable Long userId) {
         List<TripInfo> recentTrips = tripService.getRecentTripsByUserId(userId);
@@ -109,14 +94,13 @@ public class TripInfoController {
         return tripService.getTripInfoByUserId(userId, orderBy);
     }
 
-    @PutMapping("/trip-info/{userId}/{tripId}")
-    public TripInfoDTO updateTripInfo(@PathVariable Long userId,
-                                      @PathVariable Long tripId,
-                                      @RequestBody TripInfoDTO updatedTripInfoDTO) {
-        return tripService.updateTripInfo(userId, tripId, updatedTripInfoDTO);
+    // 추가: 전체 여행 정보의 개수를 알려주는 API 엔드포인트
+    @GetMapping("/count/{userId}")
+    public Long getCountOfTrips(@PathVariable("userId") Long userId) {
+        // 여행 정보의 개수 반환
+        return tripInfoRepository.countByUserId(userId);
     }
 
-    // TODO : 수정 예정 -> 유저 아이디 추가
     // 모든 여행 목록 조회
     @GetMapping
     public List<TripInfo> getAllTrips(@PathVariable("userId") Long userId) {
@@ -165,4 +149,6 @@ public class TripInfoController {
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
+
+
 }

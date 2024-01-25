@@ -26,6 +26,9 @@ public class TripInfo {
     private String tripName;
 
     @Column
+    private String country;
+
+    @Column
     private Date startDate;
 
     @Column
