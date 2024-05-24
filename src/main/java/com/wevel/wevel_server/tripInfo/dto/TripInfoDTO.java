@@ -13,7 +13,9 @@ import java.util.Date;
 @NoArgsConstructor
 public class TripInfoDTO {
     private String tripName;
-    private Long totalBudget;
+    private String country;
+    private double totalBudget;
     private Date startDate;
     private Date endDate;
+
 }

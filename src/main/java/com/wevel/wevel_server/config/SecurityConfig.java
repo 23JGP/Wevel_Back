@@ -1,15 +1,13 @@
 package com.wevel.wevel_server.config;
 
+import jakarta.servlet.http.Cookie;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
-import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -23,12 +21,12 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.DefaultSecurityFilterChain;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static org.springframework.web.util.WebUtils.getSessionId;
 
 @Configuration
 @EnableWebSecurity
@@ -41,13 +39,40 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
     private final FaceBookOAuth2UserService faceBookOAuth2UserService;
     private final GoogleOAuth2UserService googleOAuth2UserService;
 
+    private static final String[] AUTH_WHITELIST = {
+            "/api/**", "/graphiql", "/graphql",
+            "/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
+            "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html"
+    };
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
+                .authorizeHttpRequests(
+                        authorize -> authorize
+                                .shouldFilterAllDispatcherTypes(false)
+                                .requestMatchers(AUTH_WHITELIST)
+                                .permitAll()
+                                .anyRequest()
+                                .authenticated()
+                )
+                .httpBasic().disable()
+                .formLogin().disable()
+                .cors().disable()
+                .csrf().disable()
+                .build();
+    }
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
                 .requestMatchers("/resources/**")
                 .requestMatchers("/h2-console/**")
-                .requestMatchers("/api/**");
+                .requestMatchers("/api/**")
+                .requestMatchers("/swagger-ui/**")
+                .requestMatchers("/swagger-ui.html") // 추가
+                .requestMatchers("/v3/api-docs/**"); // 추가
     }
 
     @Override
@@ -56,6 +81,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .authorizeRequests(authorize -> authorize
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf
@@ -71,11 +97,15 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                                 .userService(faceBookOAuth2UserService) // facebook 인증, OAuth2 통신
                         )
                         .successHandler((request, response, authentication) -> {
-                            // 로그인 성공 시 리다이렉션할 URL 설정
-                            SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler();
-                            successHandler.setDefaultTargetUrl("http://localhost:3000/index.html");
-                            successHandler.onAuthenticationSuccess(request, response, authentication);
+                            // 쿠키를 생성하여 세션 ID를 설정
+                            Cookie cookie = new Cookie("sessionId", getSessionId(request));
+                            cookie.setPath("/"); // 쿠키의 유효 경로를 설정
+                            response.addCookie(cookie);
+
+                            // 리다이렉션
+                            response.sendRedirect("http://localhost:3000/index.html");
                         })
+
                         .defaultSuccessUrl("http://localhost:3000/index.html", true) // defaultSuccessURL 설정
                 );
     }

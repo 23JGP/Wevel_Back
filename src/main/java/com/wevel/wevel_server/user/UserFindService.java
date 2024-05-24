@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -16,5 +18,10 @@ public class UserFindService {
 
     public User findByEmail(final String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public User findById(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        return userOptional.orElse(null);
     }
 }
