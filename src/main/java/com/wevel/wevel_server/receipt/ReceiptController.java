@@ -10,6 +10,7 @@ import com.wevel.wevel_server.receipt.repository.ReceiptRepository;
 import com.wevel.wevel_server.receipt.service.ReceiptService;
 import com.wevel.wevel_server.tripInfo.entity.TripInfo;
 import com.wevel.wevel_server.tripInfo.service.TripInfoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/receipts")
+@Tag(name = "Receipt", description = "영수증 관련 API")
 public class ReceiptController {
 
     @Autowired

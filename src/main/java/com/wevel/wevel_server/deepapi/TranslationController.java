@@ -2,14 +2,12 @@ package com.wevel.wevel_server.deepapi;
 
 import com.wevel.wevel_server.deepapi.model.TranslationRequest;
 import com.wevel.wevel_server.deepapi.model.TranslationResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +18,7 @@ import java.util.Collections;
 
 @RestController
 @RequestMapping("/api")
+@Tag(name = "DeepL", description = "번역 API")
 class TranslationController {
 
     private final DeepLConfig deepLConfig;

@@ -1,24 +1,21 @@
 package com.wevel.wevel_server.tripInfo.controller;
 
 import com.wevel.wevel_server.receipt.service.ReceiptService;
-import com.wevel.wevel_server.tripInfo.dto.SpentPercentageResponse;
 import com.wevel.wevel_server.tripInfo.dto.TripInfoDTO;
 import com.wevel.wevel_server.tripInfo.entity.TripInfo;
 import com.wevel.wevel_server.tripInfo.repository.TripInfoRepository;
 import com.wevel.wevel_server.tripInfo.service.TripInfoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/trips")
+@Tag(name = "Trip API", description = "여행일지(폴더) 관련 API")
 public class TripInfoController {
 
     @Autowired

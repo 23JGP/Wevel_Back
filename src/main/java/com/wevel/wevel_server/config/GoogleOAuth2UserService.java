@@ -6,8 +6,6 @@ import com.wevel.wevel_server.user.UserRegistrationService;
 import com.wevel.wevel_server.user.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -47,7 +45,7 @@ public class GoogleOAuth2UserService implements OAuth2UserService<OidcUserReques
         if (user != null) {
             Long userId = user.getId();
             storeUserIdInSession(userId);
-            System.out.println("session save ID: " + userId);
+//            System.out.println("session save ID: " + userId);
         }
 
         return new DefaultOidcUser(
@@ -58,9 +56,14 @@ public class GoogleOAuth2UserService implements OAuth2UserService<OidcUserReques
     }
 
 
-    private void storeUserIdInSession(Long userId) {
+    private synchronized void storeUserIdInSession(Long userId) {
+
+        String secretKey = "userId";
         HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getSession();
-        session.setAttribute("userId", userId);
+        session.setAttribute(secretKey, userId);
+        System.out.println(session.getAttribute(secretKey));
     }
+
+
 
 }
