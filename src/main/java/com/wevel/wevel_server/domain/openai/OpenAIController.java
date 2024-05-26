@@ -2,12 +2,10 @@ package com.wevel.wevel_server.domain.openai;
 
 import com.wevel.wevel_server.domain.openai.dto.ChatGPTRequest;
 import com.wevel.wevel_server.domain.openai.dto.ChatGPTResponse;
+import com.wevel.wevel_server.domain.openai.dto.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
@@ -21,13 +19,17 @@ public class OpenAIController {
     private String apiURL;
 
     @Autowired
-    private RestTemplate template;
+    private RestTemplate restTemplate;
 
     @GetMapping("/chat")
-    public String chat(@RequestParam(name = "prompt")String prompt){
+    public String chat(@RequestBody String prompt){
         ChatGPTRequest request = new ChatGPTRequest(model, prompt);
-        ChatGPTResponse chatGPTResponse =  template.postForObject(apiURL, request, ChatGPTResponse.class);
-        return chatGPTResponse.getChoices().get(0).getMessage().getContent();
-    }
+        request.getMessages().add(new Message("system", "You are a helpful assistant to analyze the purchase items, quantity, and amount from the receipt and output it in JSON format AND translate Korean"));
 
+        ChatGPTResponse chatGPTResponse = restTemplate.postForObject(apiURL, request, ChatGPTResponse.class);
+
+        String messageContent = chatGPTResponse.getChoices().get(0).getMessage().getContent();
+
+        return messageContent;
+    }
 }
