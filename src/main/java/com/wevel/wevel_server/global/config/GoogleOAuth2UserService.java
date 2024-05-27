@@ -45,7 +45,7 @@ public class GoogleOAuth2UserService implements OAuth2UserService<OidcUserReques
         if (user != null) {
             Long userId = user.getId();
             storeUserIdInSession(userId);
-//            System.out.println("session save ID: " + userId);
+            System.out.println("session save ID: " + userId);
         }
 
         return new DefaultOidcUser(
@@ -56,8 +56,7 @@ public class GoogleOAuth2UserService implements OAuth2UserService<OidcUserReques
     }
 
 
-    private synchronized void storeUserIdInSession(Long userId) {
-
+    private void storeUserIdInSession(Long userId) {
         String secretKey = "userId";
         HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getSession();
         session.setAttribute(secretKey, userId);
