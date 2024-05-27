@@ -21,7 +21,6 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.web.DefaultSecurityFilterChain;
-import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,23 +44,6 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
             "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html"
     };
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-                .authorizeHttpRequests(
-                        authorize -> authorize
-                                .shouldFilterAllDispatcherTypes(false)
-                                .requestMatchers(AUTH_WHITELIST)
-                                .permitAll()
-                                .anyRequest()
-                                .authenticated()
-                )
-                .httpBasic().disable()
-                .formLogin().disable()
-                .cors().disable()
-                .csrf().disable()
-                .build();
-    }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -110,6 +92,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 );
     }
 
+
     @Override
     public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {
         System.out.println("success");
@@ -155,7 +138,6 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .clientSecret(clientSecret)
                 .build();
     }
-
 
     private ClientRegistration facebookClientRegistration() {
         // yml에 있는 id, secret 가져오기
