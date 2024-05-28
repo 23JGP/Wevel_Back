@@ -3,8 +3,10 @@ package com.wevel.wevel_server.global.config;
 import com.wevel.wevel_server.global.jwt.TokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -96,22 +99,50 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                                 .userService(faceBookOAuth2UserService)
                         )
                         .successHandler((request, response, authentication) -> {
+                            if (authentication == null) {
+                                log.error("Authentication is null");
+                                throw new NullPointerException("Authentication is null");
+                            }
+
+                            log.info("Authentication: {}", authentication);
+
+                            // 세션 정보 가져오기
+                            HttpSession session = request.getSession(false);
+                            if (session != null) {
+                                log.info("Session ID: " + session.getId());
+                                log.info("Creation Time: " + new Date(session.getCreationTime()));
+                                log.info("Last Accessed Time: " + new Date(session.getLastAccessedTime()));
+                                log.info("Max Inactive Interval: " + session.getMaxInactiveInterval());
+
+                                log.info("Setting authType in session...");
+                                session.setAttribute("authType", authentication.getAuthorities().toString());
+                                log.info("AuthType set in session: {}", authentication.getAuthorities().toString());
+                            } else {
+                                log.error("Session object is null");
+                            }
+
+                            // JWT 토큰 생성 및 설정
                             String token = tokenProvider.createToken(authentication);
                             response.setHeader("Authorization", "Bearer " + token);
-                            log.info(token);
-                            System.out.println("token : " + token);
-                            response.sendRedirect("http://localhost:3000/html/travel.html");
+                            log.info("Generated JWT Token: {}", token);
+                            Cookie cookie = new Cookie("jwt", token);
+                            cookie.setHttpOnly(true);
+                            cookie.setSecure(true);
+                            cookie.setPath("/");
+                            response.addCookie(cookie);
+                            response.sendRedirect("http://localhost:3000/index.html");
                         })
-//                        .defaultSuccessUrl("http://localhost:3000/html/travel.html", true)
                 )
                 .sessionManagement(session -> session
-                        .sessionFixation(sessionFixation -> sessionFixation.newSession())
-                        .maximumSessions(1)
+                        .sessionFixation().newSession() // 세션 고정 보호
+                        .maximumSessions(1) // 최대 세션 수 제한
+                        .maxSessionsPreventsLogin(true) // 최대 세션 수 초과 시 새 로그인 방지
                 )
                 .addFilterBefore(new JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
 
     public static class JwtFilter extends OncePerRequestFilter {
 
@@ -127,8 +158,14 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
             String jwt = resolveToken(request);
             if (jwt != null && tokenProvider.validateToken(jwt)) {
                 String username = tokenProvider.getUsernameFromToken(jwt);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, null);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                if (username != null) {
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, null);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                } else {
+                    log.error("Username extracted from token is null");
+                }
+            } else {
+                log.error("JWT token is invalid or not present");
             }
             filterChain.doFilter(request, response);
         }
@@ -141,6 +178,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
             return null;
         }
     }
+
 
     @Override
     public void onApplicationEvent(InteractiveAuthenticationSuccessEvent event) {
