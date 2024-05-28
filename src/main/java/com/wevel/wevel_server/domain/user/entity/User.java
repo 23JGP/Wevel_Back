@@ -1,4 +1,4 @@
-package com.wevel.wevel_server.domain.user;
+package com.wevel.wevel_server.domain.user.entity;
 
 
 import jakarta.persistence.*;

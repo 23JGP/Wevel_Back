@@ -1,5 +1,7 @@
-package com.wevel.wevel_server.domain.user;
+package com.wevel.wevel_server.domain.user.service;
 
+import com.wevel.wevel_server.domain.user.entity.User;
+import com.wevel.wevel_server.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

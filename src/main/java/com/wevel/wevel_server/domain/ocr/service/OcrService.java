@@ -1,4 +1,4 @@
-package com.wevel.wevel_server.domain.ocr;
+package com.wevel.wevel_server.domain.ocr.service;
 
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;

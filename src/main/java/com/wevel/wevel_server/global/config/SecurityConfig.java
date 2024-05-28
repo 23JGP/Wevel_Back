@@ -1,7 +1,7 @@
 package com.wevel.wevel_server.global.config;
 
-import com.wevel.wevel_server.domain.user.User;
-import com.wevel.wevel_server.domain.user.UserFindService;
+import com.wevel.wevel_server.domain.user.entity.User;
+import com.wevel.wevel_server.domain.user.service.UserFindService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.wevel.wevel_server.domain.tripInfo.controller;
+package com.wevel.wevel_server.domain.tripInfo;
 
 import com.wevel.wevel_server.domain.receipt.service.ReceiptService;
 import com.wevel.wevel_server.domain.tripInfo.dto.TripInfoDTO;

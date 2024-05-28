@@ -1,4 +1,4 @@
-package com.wevel.wevel_server.domain.receipt;
+package com.wevel.wevel_server.domain.receipt.controller;
 import com.wevel.wevel_server.domain.memo.entity.Memo;
 import com.wevel.wevel_server.domain.memo.repository.MemoRepository;
 import com.wevel.wevel_server.domain.receipt.dto.ProductDTO;

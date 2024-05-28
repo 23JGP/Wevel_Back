@@ -1,6 +1,8 @@
-package com.wevel.wevel_server.domain.user;
+package com.wevel.wevel_server.domain.user.controller;
 
 import com.wevel.wevel_server.domain.user.dto.UserResponse;
+import com.wevel.wevel_server.domain.user.entity.User;
+import com.wevel.wevel_server.domain.user.service.UserFindService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

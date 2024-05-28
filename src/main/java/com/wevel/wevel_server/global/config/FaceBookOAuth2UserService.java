@@ -1,6 +1,6 @@
 package com.wevel.wevel_server.global.config;
 
-import com.wevel.wevel_server.domain.user.UserRegistrationService;
+import com.wevel.wevel_server.domain.user.service.UserRegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
