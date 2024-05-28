@@ -13,11 +13,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReceiptDTO {
-
     private Long receiptId;
     private Long userId;
     private Date date;
-    private String tripName;
+    private Long tripId;
     private String title;
     private List<ProductDTO> productDTOList;
     private int tax;

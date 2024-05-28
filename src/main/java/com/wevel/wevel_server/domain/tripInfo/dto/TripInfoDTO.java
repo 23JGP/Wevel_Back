@@ -12,6 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TripInfoDTO {
+    private Long tripId;
     private String tripName;
     private String country;
     private double totalBudget;

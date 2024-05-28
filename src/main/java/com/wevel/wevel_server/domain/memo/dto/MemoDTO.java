@@ -12,10 +12,9 @@ import java.util.Date;
 @Getter
 @Setter
 public class MemoDTO {
-
     private Long memoId;
     private Long userId;
-    private String tripName;
+    private Long tripId;
     private Date date;
     private String amountReceived;
     private String amountGiven;

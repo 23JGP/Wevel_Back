@@ -115,7 +115,7 @@ public class ReceiptService {
         // Memo 엔터티 생성
         Memo memoEntity = new Memo();
         memoEntity.setUserId(receiptDTO.getUserId());
-        memoEntity.setTripName(receiptDTO.getTripName());
+        memoEntity.setTripId(receiptDTO.getTripId());
         memoEntity.setDate(receiptDTO.getDate());
         memoEntity.setAmountReceived(receiptDTO.getReceivedMemos());
         memoEntity.setAmountGiven(receiptDTO.getGivenMemos());
@@ -126,7 +126,7 @@ public class ReceiptService {
         Receipt receiptEntity = Receipt.builder()
                 .userId(receiptDTO.getUserId())
                 .date(receiptDTO.getDate())
-                .tripName(receiptDTO.getTripName())
+                .tripId(receiptDTO.getTripId())
                 .title(receiptDTO.getTitle())
                 .products(productEntities)
                 .tax(receiptDTO.getTax())
@@ -149,7 +149,7 @@ public class ReceiptService {
         Receipt existingReceipt = receiptRepository.findById(receiptId)
                 .orElseThrow(() -> new EntityNotFoundException("Receipt not found with id: " + receiptId));
 
-        existingReceipt.setTripName(updatedReceipt.getTripName());
+        existingReceipt.setTripId(updatedReceipt.getTripId());
         existingReceipt.setTitle(updatedReceipt.getTitle());
         existingReceipt.setProducts(updatedReceipt.getProducts());
         existingReceipt.setMemo(updatedReceipt.getMemo());
@@ -170,7 +170,7 @@ public class ReceiptService {
 
             // 업데이트 로직 수행
             existingReceipt.setUserId(receiptDTO.getUserId());
-            existingReceipt.setTripName(receiptDTO.getTripName());
+            existingReceipt.setTripId(receiptDTO.getTripId());
             existingReceipt.setTitle(receiptDTO.getTitle());
 
             receiptRepository.save(existingReceipt);
@@ -179,7 +179,7 @@ public class ReceiptService {
         }
     }
 
-    public List<Receipt> getReceiptsByUserIdAndTripName(Long userId, String tripName) {
-        return receiptRepository.findByUserIdAndTripName(userId, tripName);
+    public List<Receipt> getReceiptsByUserIdAndTripId(Long userId, Long tripId) {
+        return receiptRepository.findByUserIdAndTripId(userId, tripId);
     }
 }

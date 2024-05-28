@@ -3,17 +3,15 @@ package com.wevel.wevel_server.domain.memo;
 import com.wevel.wevel_server.domain.memo.dto.GivenMemoResponse;
 import com.wevel.wevel_server.domain.memo.dto.MemoAllResponse;
 import com.wevel.wevel_server.domain.memo.dto.ReceivedMemoResponse;
-import com.wevel.wevel_server.domain.memo.service.MemoService;
 import com.wevel.wevel_server.domain.memo.repository.MemoRepository;
+import com.wevel.wevel_server.domain.memo.service.MemoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,41 +31,42 @@ public class MemoController {
         this.memoService = memoService;
     }
 
-//    @GetMapping("/{memoId}")
-//    public ResponseEntity<MemoDTO> getMemo(@PathVariable Long memoId) {
-//        MemoDTO memoDTO = memoService.getMemoById(memoId);
-//        return ResponseEntity.ok(memoDTO);
-//    }
 
-    // 홈페이지에서 전체 메모 불러오기 get = /api/memo/all/:id/:tripName
-    // TODO : 성공하면 메모 삭제 기능 추가
-//    @GetMapping("/all/{userId}/{tripName}")
-//    public List<MemoResponse> getMemoDetails(@PathVariable Long userId, @PathVariable String tripName) {
-//        return memoService.getMemoDetails(userId, tripName);
-//    }
-
-    @GetMapping("/all/{userId}/{tripName}")
-    public MemoAllResponse getCombinedMemos(@PathVariable Long userId, @PathVariable String tripName) {
-        List<GivenMemoResponse> givenMemos = memoService.getMemoGiven(userId, tripName);
-        List<ReceivedMemoResponse> receivedMemos = memoService.getMemoReceived(userId, tripName);
+    @GetMapping("/all/{userId}/{tripId}")
+    public MemoAllResponse getCombinedMemos(@PathVariable Long userId, @PathVariable Long tripId) {
+        List<GivenMemoResponse> givenMemos = memoService.getMemoGiven(userId, tripId);
+        List<ReceivedMemoResponse> receivedMemos = memoService.getMemoReceived(userId, tripId);
 
         return new MemoAllResponse(givenMemos, receivedMemos);
     }
 
-    // 홈페이지에서 줘야하는 돈 메모 불러오기 get = /api/memo/given/:id/:tripName
-    @GetMapping("/give/{userId}/{tripName}")
-    public List<GivenMemoResponse> getGivenMemos(@PathVariable Long userId, @PathVariable String tripName) {
-        return memoService.getMemoGiven(userId, tripName);
+    // 홈페이지에서 줘야하는 돈 메모 불러오기 get = /api/memo/given/:id/:tripId
+    @GetMapping("/give/{userId}/{tripId}")
+    public List<GivenMemoResponse> getGivenMemos(@PathVariable Long userId, @PathVariable Long tripId) {
+        return memoService.getMemoGiven(userId, tripId);
     }
 
-    // 홈페이지에서 받아야하는 돈 메모 불러오기 get = /api/memo/received/:id/:tripName
+    // 홈페이지에서 받아야하는 돈 메모 불러오기 get = /api/memo/received/:id/:tripId
     @Operation(summary = "Get received memos", description = "홈페이지에서 받아야하는 돈 메모를 불러옵니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공", content = {@io.swagger.v3.oas.annotations.media.Content(mediaType = "application/json")}),
             @ApiResponse(responseCode = "404", description = "해당 ID 또는 여행 이름에 해당하는 메모가 없습니다.")
     })
-    @GetMapping("/receive/{userId}/{tripName}")
-    public List<ReceivedMemoResponse> getReceived(@PathVariable Long userId, @PathVariable String tripName) {
-        return memoService.getMemoReceived(userId, tripName);
+    @GetMapping("/receive/{userId}/{tripId}")
+    public List<ReceivedMemoResponse> getReceived(@PathVariable Long userId, @PathVariable Long tripId) {
+        return memoService.getMemoReceived(userId, tripId);
     }
+
+    @PatchMapping("/check/receive/{memoId}")
+    public ResponseEntity<?> checkRcompleted(@PathVariable Long memoId) {
+        memoService.checkRcompleted(memoId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/check/give/{memoId}")
+    public ResponseEntity<?> checkRcompleted(@PathVariable Long memoId) {
+        memoService.checkGcompleted(memoId);
+        return ResponseEntity.ok().build();
+    }
+
 }

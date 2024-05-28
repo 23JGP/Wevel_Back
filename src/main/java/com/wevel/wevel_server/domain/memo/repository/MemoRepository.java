@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface  MemoRepository extends JpaRepository<Memo, Long> {
-    List<Memo> findByUserIdAndTripName(Long userId, String tripName);
+//    List<Memo> findByUserIdAndTripName(Long userId, String tripName);
+    List<Memo> findByUserIdAndTripId(Long userId, Long tripId);
 }

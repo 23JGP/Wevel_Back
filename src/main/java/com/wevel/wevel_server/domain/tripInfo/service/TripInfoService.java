@@ -1,9 +1,9 @@
 
 package com.wevel.wevel_server.domain.tripInfo.service;
 
-import com.wevel.wevel_server.domain.tripInfo.repository.TripInfoRepository;
 import com.wevel.wevel_server.domain.tripInfo.dto.TripInfoDTO;
 import com.wevel.wevel_server.domain.tripInfo.entity.TripInfo;
+import com.wevel.wevel_server.domain.tripInfo.repository.TripInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,19 +12,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class TripInfoService {
+
     @Autowired
     private TripInfoRepository tripInfoRepository;
 
-//    public List<TripInfo> getLatestTripByUserId(Long userId) {
-//        try {
-//            Date currentDate = new Date();
-//            return tripInfoRepository.findByUserIdAndStartDateBeforeOrderByStartDateDesc(userId, currentDate);
-//        } catch (Exception e) {
-//            // 예외 로깅 또는 처리
-//            e.printStackTrace();
-//            return Collections.emptyList();
-//        }
-//    }
 
     public List<TripInfo> getRecentTripsByUserId(Long userId) {
         return tripInfoRepository.findByUserIdOrderByStartDateDesc(userId);
@@ -67,10 +58,8 @@ public class TripInfoService {
 
 
     public TripInfoDTO updateTripInfo(Long userId, Long tripId, TripInfoDTO updatedTripInfoDTO) {
-        TripInfo tripInfo = tripInfoRepository.findByUserIdAndTripId(userId, tripId)
-                .orElseThrow(() -> new IllegalArgumentException("TripInfo not found for userId: " + userId + " and tripId: " + tripId));
+        TripInfo tripInfo = (TripInfo) tripInfoRepository.findByUserIdAndTripId(userId, tripId);
 
-        // Update the fields if provided in the request
         if (updatedTripInfoDTO.getTripName() != null) {
             tripInfo.setTripName(updatedTripInfoDTO.getTripName());
         }
@@ -91,6 +80,7 @@ public class TripInfoService {
 
     private TripInfoDTO convertToDTO(TripInfo tripInfo) {
         return new TripInfoDTO(
+                tripInfo.getTripId(),
                 tripInfo.getTripName(),
                 tripInfo.getCountry(),
                 tripInfo.getTotalBudget(),
@@ -99,8 +89,8 @@ public class TripInfoService {
         );
     }
 
-    public TripInfo findTripInfoByUserIdAndTripName(Long userId, String tripName) {
-        return tripInfoRepository.findByUserIdAndTripName(userId, tripName);
+    public List<TripInfo> findTripInfoByUserIdAndTripId(Long userId, Long tripId) {
+        return tripInfoRepository.findByUserIdAndTripId(userId, tripId);
     }
 
     public void saveTripInfo(TripInfo newTripInfo) {

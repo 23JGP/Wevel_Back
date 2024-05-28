@@ -3,10 +3,7 @@ package com.wevel.wevel_server.domain.memo.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.wevel.wevel_server.domain.receipt.entity.Receipt;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -26,7 +23,7 @@ public class Memo {
     private Long userId;
 
     @Column
-    private String tripName;
+    private Long tripId;
 
 
     @JsonBackReference
@@ -48,16 +45,5 @@ public class Memo {
 
     @Column(nullable = true)
     private Boolean Gcompleted;
-
-    public Memo(Long userId, String tripName, Receipt receipt, Date date, String receivedMemos, String givenMemos, Object o, Object o1) {
-        this.userId = userId;
-        this.tripName = tripName;
-        this.receipt = receipt;
-        this.date = date;
-        this.amountReceived = receivedMemos;
-        this.amountGiven = givenMemos;
-        this.Rcompleted = Boolean.FALSE;  // Boolean 타입의 경우 TRUE 또는 FALSE로 설정
-        this.Gcompleted = Boolean.FALSE;  // Boolean 타입의 경우 TRUE 또는 FALSE로 설정
-    }
 
 }
