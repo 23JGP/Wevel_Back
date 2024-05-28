@@ -9,16 +9,12 @@ public class UserRegistrationService {
     private final UserFindService userFindService;
     private final UserRepository userRepository;
 
-    public void requestRegistration(
-            final String name,
-            final String email
-    ){
-      final boolean exists = userFindService.existsByEmail(email);
+    public void registerUser(String name, String email) {
+        User user = userFindService.findByEmail(email);
 
-      if(exists == false) {
-          final User user = new User(name, email);
-          userRepository.save(user);
-      }
-
+        if (user == null) {
+            user = new User(name, email);
+            userRepository.save(user);
+        }
     }
 }
