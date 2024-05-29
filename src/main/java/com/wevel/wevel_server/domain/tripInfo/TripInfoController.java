@@ -85,6 +85,7 @@ public class TripInfoController {
                     existingTrip.setEndDate(updatedTripinfo.getEndDate());
                     existingTrip.setSpentAmount(updatedTripinfo.getSpentAmount());
                     existingTrip.setRemainingAmount(updatedTripinfo.getRemainingAmount());
+                    existingTrip.setCountry(updatedTripinfo.getCountry());
                     TripInfo savedTrip = tripInfoRepository.save(existingTrip);
                     return ResponseEntity.ok(savedTrip);
                 })
@@ -101,17 +102,5 @@ public class TripInfoController {
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
-
-
-//    // 특정 유저의 여행기간이 최근순인 tripId를 반환하는 API 엔드포인트
-//    @GetMapping("/latest/{userId}")
-//    public ResponseEntity<Long> getLatestTripIdByUserId(@PathVariable Long userId) {
-//        TripInfo latestTrip = tripInfoRepository.findFirstByUserIdOrderByStartDateDesc(userId);
-//        if (latestTrip != null) {
-//            return ResponseEntity.ok(latestTrip.getTripId());
-//        } else {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//        }
-//    }
 
 }
