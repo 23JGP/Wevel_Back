@@ -46,36 +46,39 @@ public class ReceiptController {
 
         // TripInfo 리스트를 반환하도록 수정
         List<TripInfo> tripInfos = tripInfoService.findTripInfoByUserIdAndTripId(receiptDTO.getUserId(), receiptDTO.getTripId());
-        // 리스트가 비어있는지 확인
+
+        TripInfo tripInfo;
         if (!tripInfos.isEmpty()) {
             // 리스트의 첫 번째 항목 사용
-            TripInfo tripInfo = tripInfos.get(0);
-
-            for (ProductDTO productDTO : receiptDTO.getProductDTOList()) {
-                // 상품 정보 처리
-                tripInfo.setSpentAmount(tripInfo.getSpentAmount() + productDTO.getPrice());
-                tripInfo.setRemainingAmount(tripInfo.getTotalBudget() - productDTO.getPrice());
-            }
-            // TripInfo 엔티티 저장
-            tripInfoService.saveTripInfo(tripInfo);
+            tripInfo = tripInfos.get(0);
         } else {
             // TripInfo가 없는 경우 처리
-            TripInfo newTripInfo = new TripInfo();
-            newTripInfo.setUserId(receiptDTO.getUserId());
-            newTripInfo.setTripId(receiptDTO.getTripId());
-            for (ProductDTO productDTO : receiptDTO.getProductDTOList()) {
-                // 상품 정보 처리
-                newTripInfo.setSpentAmount(productDTO.getQuantity() * productDTO.getPrice());
-                newTripInfo.setRemainingAmount(newTripInfo.getTotalBudget() - productDTO.getPrice());
-            }
-            // 새로운 TripInfo 엔티티 저장
-            tripInfoService.saveTripInfo(newTripInfo);
+            tripInfo = new TripInfo();
+            tripInfo.setUserId(receiptDTO.getUserId());
+            tripInfo.setTripId(receiptDTO.getTripId());
+            tripInfo.setSpentAmount(0.0);
+            tripInfo.setRemainingAmount(tripInfo.getTotalBudget());
         }
+
+        double totalSpentAmount = tripInfo.getSpentAmount();
+        for (ProductDTO productDTO : receiptDTO.getProductDTOList()) {
+            // 상품 정보 처리
+            totalSpentAmount += productDTO.getPrice();
+        }
+
+        // 업데이트된 값을 설정
+        tripInfo.setSpentAmount(totalSpentAmount);
+        tripInfo.setRemainingAmount(tripInfo.getTotalBudget() - totalSpentAmount);
+
+        // TripInfo 엔티티 저장
+        tripInfoService.saveTripInfo(tripInfo);
+
         return new ResponseEntity<>(savedReceipt, HttpStatus.CREATED);
     }
 
 
-    @DeleteMapping("/deleteMemo/{memoId}")
+
+    @DeleteMapping("/{memoId}")
     public ResponseEntity<String> deleteMemo(@PathVariable Long memoId) {
         Optional<Memo> memoOptional = memoRepository.findById(memoId);
         if (memoOptional.isEmpty()) {
