@@ -58,15 +58,16 @@ public class MemoController {
     }
 
     @PatchMapping("/check/receive/{memoId}")
-    public ResponseEntity<?> checkRcompleted(@PathVariable Long memoId) {
-        memoService.checkRcompleted(memoId);
+    public ResponseEntity<?> checkReceiveCompleted(@PathVariable Long memoId) {
+        memoService.toggleRcompleted(memoId);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/check/give/{memoId}")
-    public ResponseEntity<?> checkRcompleted(@PathVariable Long memoId) {
-        memoService.checkGcompleted(memoId);
+    public ResponseEntity<?> checkGiveCompleted(@PathVariable Long memoId) {
+        memoService.toggleGcompleted(memoId);
         return ResponseEntity.ok().build();
     }
+
 
 }

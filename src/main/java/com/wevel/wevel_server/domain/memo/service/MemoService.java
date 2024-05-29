@@ -87,18 +87,20 @@ public class MemoService {
         }
     }
 
-    public void checkRcompleted(Long memoId) {
+    public void toggleRcompleted(Long memoId) {
         Memo memo = memoRepository.findById(memoId)
                 .orElseThrow(() -> new RuntimeException("Memo not found with id: " + memoId));
-        memo.setRcompleted(true);
+        memo.setRcompleted(!memo.getRcompleted()); // 현재 값의 반대로 설정
         memoRepository.save(memo);
     }
 
-    public void checkGcompleted(Long memoId) {
+    public void toggleGcompleted(Long memoId) {
         Memo memo = memoRepository.findById(memoId)
                 .orElseThrow(() -> new RuntimeException("Memo not found with id: " + memoId));
-        memo.setGcompleted(true);
+        memo.setGcompleted(!memo.getGcompleted()); // 현재 값의 반대로 설정
         memoRepository.save(memo);
     }
+
+
 
 }
