@@ -27,7 +27,7 @@ public class UserController {
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            return new UserResponse(user.getEmail(), user.getName());
+            return new UserResponse(user.getEmail(), user.getName(), user.getProvider());
         } else {
             // 해당 userId에 대한 사용자를 찾을 수 없을 경우 예외처리 또는 적절한 응답 처리
             return null;

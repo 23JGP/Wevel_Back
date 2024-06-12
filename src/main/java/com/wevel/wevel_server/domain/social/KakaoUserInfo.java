@@ -1,9 +1,11 @@
-package com.wevel.wevel_server.global.config.service;
+package com.wevel.wevel_server.domain.social;
+
+import com.wevel.wevel_server.global.oauth.OAuth2UserInfo;
 
 import java.util.Map;
 
 
-public class KakaoUserInfo implements OAuth2UserInfo{
+public class KakaoUserInfo implements OAuth2UserInfo {
 
     private Map<String, Object> attributes; // getAttributes
     private Map<String, Object> attributesProperties; // getAttributes

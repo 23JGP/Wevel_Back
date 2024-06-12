@@ -1,4 +1,4 @@
-package com.wevel.wevel_server.global.config.service;
+package com.wevel.wevel_server.global.oauth;
 
 import com.wevel.wevel_server.domain.user.entity.User;
 import com.wevel.wevel_server.domain.user.service.UserFindService;

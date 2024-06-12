@@ -1,4 +1,4 @@
-package com.wevel.wevel_server.global.config.service;
+package com.wevel.wevel_server.global.oauth;
 
 public interface OAuth2UserInfo {
     String getProviderId();

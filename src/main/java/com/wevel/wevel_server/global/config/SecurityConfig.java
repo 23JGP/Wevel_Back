@@ -4,9 +4,9 @@ import com.wevel.wevel_server.domain.alarm.service.AlarmService;
 import com.wevel.wevel_server.domain.user.entity.User;
 import com.wevel.wevel_server.domain.user.service.UserFindService;
 import com.wevel.wevel_server.domain.user.service.UserRegistrationService;
-import com.wevel.wevel_server.global.config.service.CustomOAuth2UserService;
-import com.wevel.wevel_server.global.config.service.OAuth2UserInfo;
-import com.wevel.wevel_server.global.config.service.OAuth2UserInfoFactory;
+import com.wevel.wevel_server.global.oauth.CustomOAuth2UserService;
+import com.wevel.wevel_server.global.oauth.OAuth2UserInfo;
+import com.wevel.wevel_server.global.oauth.OAuth2UserInfoFactory;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,20 +45,19 @@ import java.util.List;
 @AllArgsConstructor
 public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> implements config.SecurityConfig {
 
-    private final Environment environment;
-    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
-    private final AlarmService alarmService;
-    private final String registration = "spring.security.oauth2.client.registration.";
     private final HttpSession session;
+    private final Environment environment;
+    private final AlarmService alarmService;
     private final UserFindService userFindService;
     private final UserRegistrationService userRegistrationService;
+    private final String registration = "spring.security.oauth2.client.registration.";
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
     private static final String[] AUTH_WHITELIST = {
             "/api/**", "/graphiql", "/graphql",
             "/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
             "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html"
     };
-
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -71,7 +70,6 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .requestMatchers("/swagger-ui.html") // 추가
                 .requestMatchers("/v3/api-docs/**"); // 추가
     }
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -151,7 +149,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
     }
 
     @Bean
-    @ConditionalOnProperty(name = "spring.h2.console.enabled",havingValue = "true")
+    @ConditionalOnProperty(name = "spring.h2.console.enabled", havingValue = "true")
     public WebSecurityCustomizer configureH2ConsoleEnable() {
         return web -> web.ignoring()
                 .requestMatchers(PathRequest.toH2Console());

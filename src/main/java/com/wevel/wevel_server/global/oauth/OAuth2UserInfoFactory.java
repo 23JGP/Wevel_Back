@@ -1,5 +1,8 @@
-package com.wevel.wevel_server.global.config.service;
+package com.wevel.wevel_server.global.oauth;
 
+import com.wevel.wevel_server.domain.social.GoogleUserInfo;
+import com.wevel.wevel_server.domain.social.KakaoUserInfo;
+import com.wevel.wevel_server.domain.social.NaverUserInfo;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 public class OAuth2UserInfoFactory {
