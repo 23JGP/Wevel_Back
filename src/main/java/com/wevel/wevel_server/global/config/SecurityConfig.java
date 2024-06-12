@@ -5,6 +5,8 @@ import com.wevel.wevel_server.domain.user.entity.User;
 import com.wevel.wevel_server.domain.user.service.UserFindService;
 import com.wevel.wevel_server.domain.user.service.UserRegistrationService;
 import com.wevel.wevel_server.global.config.service.CustomOAuth2UserService;
+import com.wevel.wevel_server.global.config.service.OAuth2UserInfo;
+import com.wevel.wevel_server.global.config.service.OAuth2UserInfoFactory;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -104,8 +106,10 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                             HttpSession session = request.getSession();
                             log.info("Session ID: {}", session.getId());
 
+
                             OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
                             String registrationId = ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId();
+                            OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(registrationId, oAuth2User);
                             Map<String, Object> attributes = oAuth2User.getAttributes();
                             String email = null;
 
@@ -116,14 +120,15 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                                 }
                             } else if ("google".equals(registrationId)) {
                                 email = (String) attributes.get("email");
+                            } else if("kakao".equals(registrationId)) {
+                                email = (String) oAuth2UserInfo.getEmail();
                             }
 
                             if (email == null) {
                                 log.error("Email not found for registrationId: {}", registrationId);
-                                response.sendRedirect("http://localhost:3000/login.html");
+                                response.sendRedirect("http://localhost:3000/html/login.html");
                                 return;
                             }
-
                             User user = userFindService.findByEmail(email);
                             if (user != null) {
                                 Long userId = user.getId();
@@ -179,7 +184,8 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
     public ClientRegistrationRepository clientRegistrationRepository() {
         final List<ClientRegistration> clientRegistrations = Arrays.asList(
                 googleClientRegistration(),
-                naverClientRegistration()
+                naverClientRegistration(),
+                kakaoClientRegistration()
         );
 
         return new InMemoryClientRegistrationRepository(clientRegistrations);
@@ -215,6 +221,26 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .userInfoUri("https://openapi.naver.com/v1/nid/me")
                 .userNameAttributeName("response")
                 .clientName("Naver")
+                .build();
+    }
+
+    private ClientRegistration kakaoClientRegistration() {
+        String clientId = environment.getProperty(registration + "kakao.client-id");
+        String clientSecret = environment.getProperty(registration + "kakao.client-secret");
+        String redirectUri = environment.getProperty(registration + "kakao.redirect-uri");
+
+        return ClientRegistration.withRegistrationId("kakao")
+                .clientId(clientId)
+                .clientSecret(clientSecret)
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .redirectUri(redirectUri)
+                .scope("profile_nickname", "account_email") // 동의 항목 설정
+                .authorizationUri("https://kauth.kakao.com/oauth/authorize")
+                .tokenUri("https://kauth.kakao.com/oauth/token")
+                .userInfoUri("https://kapi.kakao.com/v2/user/me")
+                .userNameAttributeName("id") // 사용자 식별자 속성 설정
+                .clientName("Kakao")
                 .build();
     }
 }

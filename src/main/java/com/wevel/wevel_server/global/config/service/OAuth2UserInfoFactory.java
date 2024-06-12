@@ -7,6 +7,8 @@ public class OAuth2UserInfoFactory {
     public static OAuth2UserInfo getOAuth2UserInfo(String registrationId, OAuth2User oAuth2User) {
         if (registrationId.equalsIgnoreCase("naver")) {
             return new NaverUserInfo(oAuth2User.getAttributes());
+        } else if (registrationId.equalsIgnoreCase("kakao")) {
+            return new KakaoUserInfo(oAuth2User.getAttributes());
         } else if (registrationId.equalsIgnoreCase("google")) {
             return new GoogleUserInfo(oAuth2User.getAttributes());
         } else {

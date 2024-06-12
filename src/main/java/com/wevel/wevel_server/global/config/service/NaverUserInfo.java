@@ -9,6 +9,11 @@ public class NaverUserInfo implements OAuth2UserInfo {
     public NaverUserInfo(Map<String, Object> attributes) {
         this.attributes = (Map<String, Object>) attributes.get("response"); // 'response' 객체를 사용하도록 수정
     }
+    
+    @Override
+    public String getProviderId() {
+        return (String) attributes.get("id");
+    }
 
     @Override
     public String getProvider() {
