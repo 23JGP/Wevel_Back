@@ -23,7 +23,7 @@ public class FaceBookOAuth2UserService implements OAuth2UserService<OAuth2UserRe
         final String name = oAuth2User.getAttributes().get("name").toString();
         final String email = oAuth2User.getAttributes().get("email").toString();
 
-        userRegistrationService.registerUser(name, email);
+        userRegistrationService.registerUser(name, email, "FACEBOOK");
 
         return new DefaultOAuth2User(
               oAuth2User.getAuthorities(),

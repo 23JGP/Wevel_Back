@@ -11,11 +11,11 @@ public class UserRegistrationService {
     private final UserFindService userFindService;
     private final UserRepository userRepository;
 
-    public void registerUser(String name, String email) {
+    public void registerUser(String name, String email, String provider) {
         User user = userFindService.findByEmail(email);
 
         if (user == null) {
-            user = new User(name, email);
+            user = new User(name, email, provider);
             userRepository.save(user);
         }
     }

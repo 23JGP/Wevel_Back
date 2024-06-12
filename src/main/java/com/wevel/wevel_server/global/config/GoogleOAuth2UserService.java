@@ -34,7 +34,7 @@ public class GoogleOAuth2UserService implements OAuth2UserService<OidcUserReques
         String name = oidcUser.getAttributes().get("name").toString();
         String email = oidcUser.getAttributes().get("email").toString();
 
-        userRegistrationService.registerUser(name, email);
+        userRegistrationService.registerUser(name, email, "GOOGLE");
         User user = userFindService.findByEmail(email);
 
         if (user != null) {

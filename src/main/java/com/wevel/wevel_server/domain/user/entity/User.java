@@ -23,9 +23,13 @@ public class User {
     @Column(name = "name", nullable = false)
     private String name;
 
-    public User(String name, String email) {
+    @Column
+    private String provider;
+
+    public User(String name, String email, String provider) {
         this.name = name;
         this.email = email;
+        this.provider = provider;
     }
 
 }
