@@ -2,6 +2,7 @@ package com.wevel.wevel_server.domain.deepapi;
 
 import com.wevel.wevel_server.domain.deepapi.model.TranslationRequest;
 import com.wevel.wevel_server.domain.deepapi.model.TranslationResponse;
+import com.wevel.wevel_server.global.config.DeepLConfig;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;

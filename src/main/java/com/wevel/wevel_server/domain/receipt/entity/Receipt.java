@@ -25,7 +25,7 @@ public class Receipt {
     private Long userId;
 
     @Column
-    private String tripName;
+    private Long tripId;
 
     @Column
     private String title;

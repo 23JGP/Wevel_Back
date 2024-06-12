@@ -18,24 +18,24 @@ public class MemoService {
     @Autowired
     private MemoRepository memoRepository;
 
-    public List<MemoResponse> getMemoDetails(Long userId, String tripName) {
-        List<Memo> memos = memoRepository.findByUserIdAndTripName(userId, tripName);
+    public List<MemoResponse> getMemoDetails(Long userId, Long tripId) {
+        List<Memo> memos = memoRepository.findByUserIdAndTripId(userId, tripId);
 
         return memos.stream()
                 .map(this::convertToMemoResponse)
                 .collect(Collectors.toList());
     }
 
-    public List<GivenMemoResponse> getMemoGiven(Long userId, String tripName) {
-        List<Memo> memos = memoRepository.findByUserIdAndTripName(userId, tripName);
+    public List<GivenMemoResponse> getMemoGiven(Long userId, Long tripId) {
+        List<Memo> memos = memoRepository.findByUserIdAndTripId(userId, tripId);
 
         return memos.stream()
                 .map(this::convertToSelectedGivenMemoResponse)
                 .collect(Collectors.toList());
     }
 
-    public List<ReceivedMemoResponse> getMemoReceived(Long userId, String tripName) {
-        List<Memo> memos = memoRepository.findByUserIdAndTripName(userId, tripName);
+    public List<ReceivedMemoResponse> getMemoReceived(Long userId, Long tripId) {
+        List<Memo> memos = memoRepository.findByUserIdAndTripId(userId, tripId);
 
         return memos.stream()
                 .map(this::convertToSelectedReceivedMemoResponse)
@@ -54,6 +54,7 @@ public class MemoService {
 
     private GivenMemoResponse convertToSelectedGivenMemoResponse(Memo memo) {
         GivenMemoResponse givenMemoResponse = new GivenMemoResponse();
+        givenMemoResponse.setMemoId(memo.getMemoId());
         givenMemoResponse.setAmountGiven(memo.getAmountGiven());
         givenMemoResponse.setGcompleted(memo.getGcompleted());
         givenMemoResponse.setDate(memo.getDate());
@@ -62,6 +63,7 @@ public class MemoService {
 
     private ReceivedMemoResponse convertToSelectedReceivedMemoResponse(Memo memo) {
         ReceivedMemoResponse receivedMemoResponse = new ReceivedMemoResponse();
+        receivedMemoResponse.setMemoId(memo.getMemoId());
         receivedMemoResponse.setAmountReceived(memo.getAmountReceived());
         receivedMemoResponse.setRcompleted(memo.getRcompleted());
         receivedMemoResponse.setDate(memo.getDate());
@@ -73,7 +75,7 @@ public class MemoService {
         if (optionalMemo.isPresent()) {
             Memo existingMemo = optionalMemo.get();
 
-            existingMemo.setTripName(memoDTO.getTripName());
+            existingMemo.setTripId(memoDTO.getTripId());
             existingMemo.setDate(memoDTO.getDate());
             existingMemo.setAmountGiven(memoDTO.getAmountGiven());
             existingMemo.setAmountReceived(memoDTO.getAmountReceived());
@@ -84,5 +86,21 @@ public class MemoService {
             // 적절한 처리 (예외 처리 등)
         }
     }
+
+    public void toggleRcompleted(Long memoId) {
+        Memo memo = memoRepository.findById(memoId)
+                .orElseThrow(() -> new RuntimeException("Memo not found with id: " + memoId));
+        memo.setRcompleted(!memo.getRcompleted()); // 현재 값의 반대로 설정
+        memoRepository.save(memo);
+    }
+
+    public void toggleGcompleted(Long memoId) {
+        Memo memo = memoRepository.findById(memoId)
+                .orElseThrow(() -> new RuntimeException("Memo not found with id: " + memoId));
+        memo.setGcompleted(!memo.getGcompleted()); // 현재 값의 반대로 설정
+        memoRepository.save(memo);
+    }
+
+
 
 }

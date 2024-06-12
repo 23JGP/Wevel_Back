@@ -8,6 +8,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class GivenMemoResponse {
+    private Long memoId;
     private String amountGiven;
     private Boolean Gcompleted;
     private Date date;

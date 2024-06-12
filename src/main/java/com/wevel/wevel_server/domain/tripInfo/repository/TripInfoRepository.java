@@ -12,8 +12,11 @@ public interface TripInfoRepository extends JpaRepository<TripInfo, Long> {
     List<TripInfo> findByUserIdOrderByStartDateAsc(Long userId);
     List<TripInfo> findByUserIdOrderByTripNameAsc(Long userId);
     List<TripInfo> findByUserIdOrderByTripNameDesc(Long userId);
-    Optional<TripInfo> findByUserIdAndTripId(Long userId, Long tripId);
+    List<TripInfo> findByUserIdAndTripId(Long userId, Long tripId);
     List<TripInfo> findByUserIdAndStartDateBeforeOrderByStartDateDesc(Long userId, Date currentDate);
     Long countByUserId(Long userId);
-    TripInfo findByUserIdAndTripName(Long userId, String tripName);
+
+    TripInfo findFirstByOrderByStartDateDesc();
+    TripInfo findFirstByUserIdOrderByStartDateDesc(Long userId);
+//    TripInfo findByUserIdAndTripId(Long userId, Long tripId);
 }

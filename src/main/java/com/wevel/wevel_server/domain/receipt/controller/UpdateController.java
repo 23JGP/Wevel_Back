@@ -1,4 +1,4 @@
-package com.wevel.wevel_server.domain.receipt;
+package com.wevel.wevel_server.domain.receipt.controller;
 
 import com.wevel.wevel_server.domain.receipt.service.ProductService;
 import com.wevel.wevel_server.domain.receipt.service.ReceiptService;

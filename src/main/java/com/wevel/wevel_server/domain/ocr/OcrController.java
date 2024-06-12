@@ -1,5 +1,6 @@
 package com.wevel.wevel_server.domain.ocr;
 
+import com.wevel.wevel_server.domain.ocr.service.OcrService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
