@@ -18,12 +18,16 @@ public class UserFindService {
         return userRepository.existsByEmail(email);
     }
 
-    public User findByEmail(final String email) {
-        return userRepository.findByEmail(email);
+    public User findBySocialId(final String socialId) {
+        return userRepository.findBySocialId(socialId);
     }
 
     public User findById(Long userId) {
         Optional<User> userOptional = userRepository.findById(userId);
         return userOptional.orElse(null);
+    }
+
+    public User findByEmailAndProviderAndUserId(String email, String provider, String providerUserId) {
+        return userRepository.findByEmailAndProviderAndSocialId(email, provider, providerUserId);
     }
 }

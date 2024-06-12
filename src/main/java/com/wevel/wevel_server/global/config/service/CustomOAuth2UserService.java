@@ -33,13 +33,14 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         String name = oAuth2UserInfo.getName();
         String email = oAuth2UserInfo.getEmail();
+        String socialUserId = oAuth2UserInfo.getProviderId();
 
-        userRegistrationService.registerUser(name, email, registrationId);
-        User user = userFindService.findByEmail(email);
+        userRegistrationService.registerUser(name, email, socialUserId, registrationId);
+        User user = userFindService.findBySocialId(socialUserId);
         if (user != null) {
-            log.info("User ID {} found for email {}", user.getId(), email);
+            log.info("User ID {} found for socialId {}", user.getId(), socialUserId);
         } else {
-            log.error("User not found after registration: {}", email);
+            log.error("User not found after registration: {}", socialUserId);
         }
 
         return oAuth2User; // OAuth2User 객체 반환

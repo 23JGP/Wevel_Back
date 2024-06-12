@@ -38,7 +38,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Configuration
@@ -106,39 +105,29 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                             HttpSession session = request.getSession();
                             log.info("Session ID: {}", session.getId());
 
-
                             OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
                             String registrationId = ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId();
+
                             OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(registrationId, oAuth2User);
-                            Map<String, Object> attributes = oAuth2User.getAttributes();
-                            String email = null;
 
-                            if ("naver".equals(registrationId)) {
-                                if (attributes.containsKey("response")) {
-                                    Map<String, Object> responseData = (Map<String, Object>) attributes.get("response");
-                                    email = (String) responseData.get("email");
-                                }
-                            } else if ("google".equals(registrationId)) {
-                                email = (String) attributes.get("email");
-                            } else if("kakao".equals(registrationId)) {
-                                email = (String) oAuth2UserInfo.getEmail();
-                            }
-
-                            if (email == null) {
+                            String providerUserId = oAuth2UserInfo.getProviderId(); // 소셜 미디어 플랫폼에서 제공하는 고유한 사용자 ID
+                            if (providerUserId == null) {
                                 log.error("Email not found for registrationId: {}", registrationId);
                                 response.sendRedirect("http://localhost:3000/html/login.html");
                                 return;
                             }
-                            User user = userFindService.findByEmail(email);
+
+                            User user = userFindService.findBySocialId(providerUserId);
                             if (user != null) {
                                 Long userId = user.getId();
                                 session.setAttribute("userId", userId);
                                 session.setAttribute("social", registrationId);
                                 log.info("User ID {} and social {} set in session.", userId, registrationId);
+
                                 alarmService.createAlarmForUser(userId);
                                 response.sendRedirect("http://localhost:3000/session.html?userId=" + userId);
                             } else {
-                                log.error("User not found for email: {}", email);
+                                log.error("User not found for providerUserId : {}", providerUserId);
                                 response.sendRedirect("http://localhost:3000/html/login.html");
                             }
                         })
@@ -174,7 +163,6 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .requestMatchers("/api/**");
     }
 
-
     @Bean
     public OAuth2AuthorizedClientService auth2AuthorizedClientService() {
         return new InMemoryOAuth2AuthorizedClientService(clientRegistrationRepository());
@@ -187,10 +175,10 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 naverClientRegistration(),
                 kakaoClientRegistration()
         );
-
         return new InMemoryClientRegistrationRepository(clientRegistrations);
     }
 
+    // Google
     private ClientRegistration googleClientRegistration() {
         // yml에 있는 id, secret 가져오기
         final String clientId = environment.getProperty(registration + "google.client-id");
@@ -200,10 +188,12 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .GOOGLE
                 .getBuilder("google")
                 .clientId(clientId)
+                .scope("email", "profile")
                 .clientSecret(clientSecret)
                 .build();
     }
 
+    // Naver
     private ClientRegistration naverClientRegistration() {
         String clientId = environment.getProperty(registration + "naver.client-id");
         String clientSecret = environment.getProperty(registration + "naver.client-secret");
@@ -224,6 +214,7 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
                 .build();
     }
 
+    // Kakao
     private ClientRegistration kakaoClientRegistration() {
         String clientId = environment.getProperty(registration + "kakao.client-id");
         String clientSecret = environment.getProperty(registration + "kakao.client-secret");
