@@ -1,5 +1,6 @@
 package com.wevel.wevel_server.domain.tripInfo.entity;
 
+import com.wevel.wevel_server.domain.tripInfo.service.TripInfoService;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
+@EntityListeners(TripInfoService.class)
 public class TripInfo {
 
     @Id

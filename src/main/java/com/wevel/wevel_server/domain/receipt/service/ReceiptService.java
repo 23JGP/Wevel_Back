@@ -3,6 +3,7 @@ package com.wevel.wevel_server.domain.receipt.service;
 import com.wevel.wevel_server.domain.memo.entity.Memo;
 import com.wevel.wevel_server.domain.memo.repository.MemoRepository;
 import com.wevel.wevel_server.domain.receipt.dto.ReceiptDTO;
+import com.wevel.wevel_server.domain.receipt.dto.ReceiptResponse;
 import com.wevel.wevel_server.domain.receipt.entity.Product;
 import com.wevel.wevel_server.domain.receipt.entity.Receipt;
 import com.wevel.wevel_server.domain.receipt.repository.ReceiptRepository;
@@ -13,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -181,5 +185,35 @@ public class ReceiptService {
 
     public List<Receipt> getReceiptsByUserIdAndTripId(Long userId, Long tripId) {
         return receiptRepository.findByUserIdAndTripId(userId, tripId);
+    }
+
+    public List<ReceiptResponse> getReceiptsByTripId(Long tripId) {
+        List<Receipt> receipts = receiptRepository.findByTripId(tripId);
+        List<ReceiptResponse> responses = new ArrayList<>();
+
+        for (Receipt receipt : receipts) {
+            ReceiptResponse response = new ReceiptResponse();
+            response.setTripId(receipt.getTripId());
+            response.setReceiptId(receipt.getReceiptId());
+            response.setTitle(receipt.getTitle());
+            response.setDate(formatDate(receipt.getDate()));
+            response.setTotal(calculateTotal(receipt.getProducts()));
+            responses.add(response);
+        }
+
+        return responses;
+    }
+
+    private Double calculateTotal(List<Product> products) {
+        Double total = 0.0;
+        for (Product product : products) {
+            total += product.getPrice() * product.getQuantity();
+        }
+        return total;
+    }
+
+    private String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy. MM. dd");
+        return sdf.format(date);
     }
 }

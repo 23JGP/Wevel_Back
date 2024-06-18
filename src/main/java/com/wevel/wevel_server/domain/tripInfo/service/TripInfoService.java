@@ -1,6 +1,7 @@
 
 package com.wevel.wevel_server.domain.tripInfo.service;
 
+import com.wevel.wevel_server.domain.alarm.repository.NotifyRepository;
 import com.wevel.wevel_server.domain.tripInfo.dto.TripInfoDTO;
 import com.wevel.wevel_server.domain.tripInfo.entity.TripInfo;
 import com.wevel.wevel_server.domain.tripInfo.repository.TripInfoRepository;
@@ -15,6 +16,8 @@ public class TripInfoService {
 
     @Autowired
     private TripInfoRepository tripInfoRepository;
+    @Autowired
+    private NotifyRepository notifyRepository;
 
 
     public List<TripInfo> getRecentTripsByUserId(Long userId) {
@@ -96,4 +99,5 @@ public class TripInfoService {
     public void saveTripInfo(TripInfo newTripInfo) {
         tripInfoRepository.save(newTripInfo);
     }
+
 }
