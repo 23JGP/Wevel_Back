@@ -20,6 +20,7 @@ public class Alarm {
     @Column(columnDefinition = "boolean default false")
     private boolean overBudgetAlarm = false;
 
+    @Getter
     @Column(columnDefinition = "boolean default false")
     private boolean spendAlarm = false;
 
