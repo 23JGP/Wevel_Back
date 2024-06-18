@@ -10,6 +10,7 @@ import java.util.Optional;
 @Service
 public class AlarmService {
     private final AlarmRepository alarmRepository;
+
     @Autowired
     public AlarmService(AlarmRepository alarmRepository) {
         this.alarmRepository = alarmRepository;
@@ -40,9 +41,7 @@ public class AlarmService {
     }
 
     public Alarm getAlarm(Long userId) {
-        Alarm alarm = alarmRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Alarm not found with userId : " + userId));
-
-        return alarm;
+        Optional<Alarm> alarmOptional = alarmRepository.findByUserId(userId);
+        return alarmOptional.orElse(null); // or throw exception if needed
     }
 }

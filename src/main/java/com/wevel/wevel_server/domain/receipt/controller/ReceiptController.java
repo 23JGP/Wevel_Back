@@ -4,6 +4,7 @@ import com.wevel.wevel_server.domain.memo.entity.Memo;
 import com.wevel.wevel_server.domain.memo.repository.MemoRepository;
 import com.wevel.wevel_server.domain.receipt.dto.ProductDTO;
 import com.wevel.wevel_server.domain.receipt.dto.ReceiptDTO;
+import com.wevel.wevel_server.domain.receipt.dto.ReceiptResponse;
 import com.wevel.wevel_server.domain.receipt.entity.Product;
 import com.wevel.wevel_server.domain.receipt.entity.Receipt;
 import com.wevel.wevel_server.domain.receipt.repository.ProductRepository;
@@ -17,6 +18,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,7 +82,10 @@ public class ReceiptController {
         return new ResponseEntity<>(savedReceipt, HttpStatus.CREATED);
     }
 
-
+    @GetMapping("/{tripId}")
+    public List<ReceiptResponse> getReceiptsByTripId(@PathVariable Long tripId) {
+        return receiptService.getReceiptsByTripId(tripId);
+    }
 
     @DeleteMapping("/{memoId}")
     public ResponseEntity<String> deleteMemo(@PathVariable Long memoId) {
