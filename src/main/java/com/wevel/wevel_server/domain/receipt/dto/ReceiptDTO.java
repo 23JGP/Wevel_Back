@@ -23,5 +23,4 @@ public class ReceiptDTO {
     private int sum;
     private String receivedMemos;
     private String givenMemos;
-
 }

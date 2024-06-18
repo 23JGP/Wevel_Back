@@ -12,7 +12,6 @@ import java.util.List;
 public interface ReceiptRepository extends JpaRepository<Receipt, Long> {
     List<Receipt> findByUserId(Long userId);
     List<Receipt> findByUserIdAndTripId(Long userId, Long tripId);
-
     @Query("SELECT r FROM Receipt r WHERE r.tripId = :tripId")
     List<Receipt> findByTripId(@Param("tripId") Long tripId);
 

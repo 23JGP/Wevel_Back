@@ -18,11 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -110,6 +105,13 @@ public class ReceiptController {
     public ResponseEntity<List<Receipt>> getReceiptsByUserId(@PathVariable Long userId) {
         List<Receipt> receipts = receiptService.getReceiptsByUserId(userId);
         return new ResponseEntity<>(receipts, HttpStatus.OK);
+    }
+
+    @GetMapping("/detail/{receiptId}")
+    public ResponseEntity<ReceiptDTO> getReceiptById(@PathVariable Long receiptId) {
+        return receiptService.getReceiptById(receiptId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/user/{userId}/trip/{tripId}")

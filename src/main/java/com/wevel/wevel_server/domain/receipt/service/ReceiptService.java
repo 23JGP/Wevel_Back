@@ -2,6 +2,7 @@ package com.wevel.wevel_server.domain.receipt.service;
 
 import com.wevel.wevel_server.domain.memo.entity.Memo;
 import com.wevel.wevel_server.domain.memo.repository.MemoRepository;
+import com.wevel.wevel_server.domain.receipt.dto.ProductDTO;
 import com.wevel.wevel_server.domain.receipt.dto.ReceiptDTO;
 import com.wevel.wevel_server.domain.receipt.dto.ReceiptResponse;
 import com.wevel.wevel_server.domain.receipt.entity.Product;
@@ -147,6 +148,44 @@ public class ReceiptService {
 
     public List<Receipt> getReceiptsByUserId(Long userId) {
         return receiptRepository.findByUserId(userId);
+    }
+
+    public Optional<ReceiptDTO> getReceiptById(Long receiptId) {
+        Optional<Receipt> receiptOptional = receiptRepository.findById(receiptId);
+        if (receiptOptional.isPresent()) {
+            Receipt receipt = receiptOptional.get();
+            ReceiptDTO receiptDTO = new ReceiptDTO();
+            receiptDTO.setReceiptId(receipt.getReceiptId());
+            receiptDTO.setUserId(receipt.getUserId());
+            receiptDTO.setTripId(receipt.getTripId());
+            receiptDTO.setTitle(receipt.getTitle());
+            receiptDTO.setTax(receipt.getTax());
+            receiptDTO.setDate(receipt.getDate());
+            receiptDTO.setProductDTOList(receipt.getProducts().stream()
+                    .map(product -> new ProductDTO(
+                            product.getProductId(),
+                            product.getProductName(),
+                            (int) product.getPrice(),
+                            product.getQuantity()
+                    ))
+                    .collect(Collectors.toList()));
+
+            Memo memo = receipt.getMemo();
+            if (memo != null) {
+                receiptDTO.setReceivedMemos(memo.getAmountReceived());
+                receiptDTO.setGivenMemos(memo.getAmountGiven());
+            }
+
+            // Calculate sum of products
+            double sum = receipt.getProducts().stream()
+                    .mapToDouble(product -> product.getPrice() * product.getQuantity())
+                    .sum();
+            receiptDTO.setSum((int) sum); // Assuming sum is of type int
+
+            return Optional.of(receiptDTO);
+        } else {
+            return Optional.empty();
+        }
     }
 
     public Receipt updateReceipt(Long receiptId, Receipt updatedReceipt) {
