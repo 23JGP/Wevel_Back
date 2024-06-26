@@ -17,14 +17,23 @@ configurations {
 	}
 }
 
-compileJava {    options.compilerArgs << '-parameters'}
+compileJava {
+	options.compilerArgs << '-parameters'
+}
+
+bootJar {
+	archiveFileName = '2024-wevel-server.jar'
+}
 
 repositories {
 	mavenCentral()
 }
 
 dependencies {
-	// Spring Boot Starters
+	// Replace H2 with MySQL
+	implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.33'
+
+	// Other dependencies remain unchanged
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
@@ -35,43 +44,26 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-	// JWT
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
-
-	// com.sun.xml.bind
 	implementation 'com.sun.xml.bind:jaxb-impl:4.0.1'
 	implementation 'com.sun.xml.bind:jaxb-core:4.0.1'
-	// javax.xml.bind
 	implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
-
-	// Optional: For encoding/decoding JWT using Jackson
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 	implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.3.2'
-	// Lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-
-
-
-	// OCR
-	implementation 'net.sourceforge.tess4j:tess4j:4.5.2' // 최신 버전 확인
+	implementation 'net.sourceforge.tess4j:tess4j:4.5.2'
 	implementation 'com.squareup.okhttp3:okhttp:4.9.1'
-
-	// Spring Session JDBC
-	implementation 'org.springframework.boot:spring-session-jdbc'
-
-	// Swagger
+	implementation 'org.springframework.session:spring-session-jdbc'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
-
-	// Database
-	runtimeOnly 'com.h2database:h2'
-
-	// Testing
+	runtimeOnly 'mysql:mysql-connector-java:8.0.27'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
+repositories {
+	mavenCentral()
+}
 
 tasks.named('test') {
 	useJUnitPlatform()

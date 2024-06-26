@@ -12,7 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -148,12 +147,12 @@ public class SecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFil
         System.out.println("success");
     }
 
-    @Bean
-    @ConditionalOnProperty(name = "spring.h2.console.enabled", havingValue = "true")
-    public WebSecurityCustomizer configureH2ConsoleEnable() {
-        return web -> web.ignoring()
-                .requestMatchers(PathRequest.toH2Console());
-    }
+//    @Bean
+//    @ConditionalOnProperty(name = "spring.h2.console.enabled", havingValue = "true")
+//    public WebSecurityCustomizer configureH2ConsoleEnable() {
+//        return web -> web.ignoring()
+//                .requestMatchers(PathRequest.toH2Console());
+//    }
 
     @Bean
     public WebSecurityCustomizer configureApiReceipts() {
